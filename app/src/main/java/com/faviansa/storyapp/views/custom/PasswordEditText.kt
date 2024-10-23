@@ -1,0 +1,34 @@
+package com.faviansa.storyapp.views.custom
+
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.util.AttributeSet
+import android.view.MotionEvent
+import android.view.View
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
+import com.faviansa.storyapp.R
+
+class PasswordEditText @JvmOverloads constructor(
+    context: Context, attrs: AttributeSet? = null
+) : AppCompatEditText(context, attrs), View.OnTouchListener {
+    private var clearButtonImage: Drawable =
+        ContextCompat.getDrawable(context, R.drawable.baseline_clear_24) as Drawable
+    private val MIN_PASSWORD_LENGTH = 8
+
+    init {
+        setOnTouchListener(this)
+    }
+
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        hint = context.getString(R.string.password_hint)
+        textAlignment = View.TEXT_ALIGNMENT_VIEW_START
+    }
+    
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        TODO("Not yet implemented")
+    }
+
+}
