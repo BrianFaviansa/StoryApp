@@ -1,7 +1,7 @@
 package com.faviansa.storyapp.data.remote.retrofit
 
-import com.faviansa.storyapp.data.remote.response.LoginResponse
-import com.faviansa.storyapp.data.remote.response.RegisterResponse
+import com.faviansa.storyapp.data.remote.response.auth.LoginResponse
+import com.faviansa.storyapp.data.remote.response.auth.RegisterResponse
 import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

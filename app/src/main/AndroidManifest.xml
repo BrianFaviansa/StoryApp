@@ -15,6 +15,10 @@
         android:theme="@style/Theme.StoryApp"
         tools:targetApi="31">
         <activity
+            android:name=".views.story.StoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.StoryApp" />
+        <activity
             android:name=".views.MainActivity"
             android:exported="true">
             <intent-filter>

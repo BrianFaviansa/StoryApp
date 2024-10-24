@@ -1,4 +1,4 @@
-package com.faviansa.storyapp.data.remote.response
+package com.faviansa.storyapp.data.remote.response.auth
 
 import com.google.gson.annotations.SerializedName
 
@@ -13,13 +13,13 @@ data class RegisterResponse(
 
 data class LoginResponse(
 
-	@field:SerializedName("loginResult")
+    @field:SerializedName("loginResult")
 	val loginResult: LoginResult? = null,
 
-	@field:SerializedName("error")
+    @field:SerializedName("error")
 	val error: Boolean? = null,
 
-	@field:SerializedName("message")
+    @field:SerializedName("message")
 	val message: String? = null
 )
 

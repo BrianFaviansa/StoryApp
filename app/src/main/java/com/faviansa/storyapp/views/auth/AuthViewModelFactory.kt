@@ -1,14 +1,16 @@
 package com.faviansa.storyapp.views.auth
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.faviansa.storyapp.data.AuthRepository
+import com.faviansa.storyapp.data.di.Injection
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 
 @Suppress("UNCHECKED_CAST")
 class AuthViewModelFactory(
     private val authRepository: AuthRepository,
-    private val preferences: StoryAppPreferences
+    private val preferences: StoryAppPreferences,
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
@@ -22,11 +24,14 @@ class AuthViewModelFactory(
         private var instance: AuthViewModelFactory? = null
 
         fun getInstance(
-            authRepository: AuthRepository,
-            preferences: StoryAppPreferences
+            context: Context,
+            preferences: StoryAppPreferences,
         ): AuthViewModelFactory {
             return instance ?: synchronized(this) {
-                instance ?: AuthViewModelFactory(authRepository, preferences).also { instance = it }
+                instance ?: AuthViewModelFactory(
+                    Injection.provideAuthRepository(context),
+                    preferences
+                )
             }
         }
     }

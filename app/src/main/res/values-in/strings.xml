@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Story App</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Masukkan dulu datamu ya</string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat Belajar di Dicoding.</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Keluar</string>
+    <string name="email_invalid">Format email tidak valid</string>
+    <string name="password_hint">Masukkan password anda</string>
+    <string name="hint_email">Masukkan email anda</string>
+    <string name="password_invalid">Password tidak boleh kurang dari 8 karakter</string>
+    <string name="silahkan_login">Silahkan Login</string>
+    <string name="masuk">Masuk</string>
+    <string name="belum_punya_akun">Belum punya akun?</string>
+    <string name="daftar_sekarang">Daftar sekarang</string>
+    <string name="masuk_sekarang">Masuk sekarang</string>
+    <string name="sudah_punya_akun">Sudah punya akun?</string>
+    <string name="first_fragment_label">Fragmen Pertama</string>
+    <string name="second_fragment_label">Fragmen Kedua</string>
+    <string name="next">Berikutnya</string>
+    <string name="previous">Sebelumnya</string>
+    <string name="create_new_story">Buat cerita baru</string>
+
+</resources>
