@@ -4,21 +4,28 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import com.faviansa.storyapp.R
 
 class PasswordEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
-) : AppCompatEditText(context, attrs), View.OnTouchListener {
+) : AppCompatEditText(context, attrs) {
     private var clearButtonImage: Drawable =
         ContextCompat.getDrawable(context, R.drawable.baseline_clear_24) as Drawable
     private val MIN_PASSWORD_LENGTH = 8
 
     init {
-        setOnTouchListener(this)
+        setPaddingRelative(30, 20, 50, 20)
+
+        addTextChangedListener { password ->
+            if (password != null) {
+                validatePassword(password.toString())
+            }
+        }
+        setupStyle()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -26,9 +33,22 @@ class PasswordEditText @JvmOverloads constructor(
         hint = context.getString(R.string.password_hint)
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
-    
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        TODO("Not yet implemented")
+
+    private fun validatePassword(password: String) {
+        error = when {
+            password.length < MIN_PASSWORD_LENGTH -> {
+                context.getString(R.string.password_invalid)
+            }
+            else -> {
+                null
+            }
+        }
     }
 
+    private fun setupStyle() {
+        setBackgroundResource(R.drawable.edit_text_bg)
+        setTextColor(ContextCompat.getColor(context, R.color.black))
+        setHintTextColor(ContextCompat.getColor(context, R.color.gray))
+        textSize = 16f
+    }
 }

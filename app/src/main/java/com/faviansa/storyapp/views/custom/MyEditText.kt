@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
@@ -12,7 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.faviansa.storyapp.R
 
-class EmailEditText @JvmOverloads constructor(
+class MyEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : AppCompatEditText(context, attrs), View.OnTouchListener {
     private var clearButtonImage: Drawable =
@@ -22,12 +21,11 @@ class EmailEditText @JvmOverloads constructor(
         setPaddingRelative(30, 20, 50, 20)
         setOnTouchListener(this)
 
-        addTextChangedListener { email ->
+        addTextChangedListener { input ->
             when {
-                email.isNullOrEmpty() -> hideClearButton()
+                input.isNullOrEmpty() -> hideClearButton()
                 else -> {
                     showClearButton()
-                    validateEmail(email.toString())
                 }
             }
         }
@@ -36,7 +34,7 @@ class EmailEditText @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        hint = context.getString(R.string.hint_email)
+        hint = context.getString(R.string.password_hint)
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
@@ -108,13 +106,6 @@ class EmailEditText @JvmOverloads constructor(
         return false
     }
 
-    private fun validateEmail(email: String) {
-        error = if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            context.getString(R.string.email_invalid)
-        } else {
-            null
-        }
-    }
 
     private fun setupStyle() {
         setBackgroundResource(R.drawable.edit_text_bg)
