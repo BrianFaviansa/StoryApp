@@ -121,7 +121,7 @@
         tools:alpha="100" />
 
 
-    <Button
+    <com.faviansa.storyapp.views.custom.MyButton
         android:id="@+id/register_button"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -129,6 +129,8 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="32dp"
         android:text="@string/signup"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ed_register_password"
