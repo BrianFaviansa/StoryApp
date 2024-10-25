@@ -1,12 +1,10 @@
 package com.faviansa.storyapp.data
 
-import com.faviansa.storyapp.data.preferences.StoryAppPreferences
-import com.faviansa.storyapp.data.remote.retrofit.ApiService
+import com.faviansa.storyapp.data.remote.retrofit.auth.AuthApiService
 import kotlinx.coroutines.flow.flow
 
 class AuthRepository private constructor(
-    private val apiService: ApiService,
-    private val preferences: StoryAppPreferences,
+    private val apiService: AuthApiService,
 ) {
     fun register(name: String, email: String, password: String) = flow {
         emit(Result.Loading)
@@ -47,10 +45,9 @@ class AuthRepository private constructor(
         private var instance: AuthRepository? = null
 
         fun getInstance(
-            apiService: ApiService,
-            preferences: StoryAppPreferences,
+            apiService: AuthApiService,
         ): AuthRepository = instance ?: synchronized(this) {
-            instance ?: AuthRepository(apiService, preferences).also { instance = it }
+            instance ?: AuthRepository(apiService).also { instance = it }
         }
     }
 }

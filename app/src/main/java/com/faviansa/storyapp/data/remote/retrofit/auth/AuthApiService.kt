@@ -1,4 +1,4 @@
-package com.faviansa.storyapp.data.remote.retrofit
+package com.faviansa.storyapp.data.remote.retrofit.auth
 
 import com.faviansa.storyapp.data.remote.response.auth.LoginResponse
 import com.faviansa.storyapp.data.remote.response.auth.RegisterResponse
@@ -7,7 +7,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
-interface ApiService {
+interface AuthApiService {
     @FormUrlEncoded
     @POST("register")
     suspend fun register(
@@ -22,5 +22,4 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String
     ): Response<LoginResponse>
-
 }

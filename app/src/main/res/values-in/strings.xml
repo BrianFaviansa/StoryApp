@@ -29,4 +29,8 @@
     <string name="enter_your_name">Masukkan nama anda</string>
     <string name="logout_message">Apakah anda yakin ingin keluar?</string>
     <string name="logout_process">Keluar…</string>
+    <string name="story_photo">Foto Cerita</string>
+    <string name="story_name">Nama Cerita</string>
+    <string name="story_description">Deskripsi Cerita</string>
+    <string name="story_date">Tanggal Cerita</string>
 </resources>

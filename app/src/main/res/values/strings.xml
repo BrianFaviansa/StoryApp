@@ -47,5 +47,9 @@
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="logout_message">Are you sure you want to log out?</string>
     <string name="logout_process">Logging out…</string>
+    <string name="story_photo">Story Photo</string>
+    <string name="story_name">Story name</string>
+    <string name="story_description">Story description</string>
+    <string name="story_date">Story date</string>
 
 </resources>
