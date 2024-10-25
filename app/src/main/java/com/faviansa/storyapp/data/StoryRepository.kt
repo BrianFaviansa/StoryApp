@@ -4,10 +4,10 @@ import com.faviansa.storyapp.data.remote.retrofit.story.StoryApiService
 import kotlinx.coroutines.flow.flow
 
 class StoryRepository private constructor(private val apiService: StoryApiService) {
-    fun getAllStories() = flow {
+    fun getAllStories(page: Int, size: Int, location: Int) = flow {
         emit(Result.Loading)
         try {
-            val response = apiService.getAllStories(1, 10, 1)
+            val response = apiService.getAllStories(page, size, location)
             when {
                 response.isSuccessful -> {
                     response.body()?.let { data ->
@@ -25,10 +25,10 @@ class StoryRepository private constructor(private val apiService: StoryApiServic
         @Volatile
         private var instance: StoryRepository? = null
 
-        fun getInstance(apiService: StoryApiService): StoryRepository {
-            return instance ?: synchronized(this) {
-                instance ?: StoryRepository(apiService).also { instance = it }
-            }
+        fun getInstance(
+            apiService: StoryApiService,
+        ): StoryRepository = instance ?: synchronized(this) {
+            instance ?: StoryRepository(apiService).also { instance = it }
         }
     }
 }
