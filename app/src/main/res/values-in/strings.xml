@@ -26,5 +26,7 @@
     <string name="next">Berikutnya</string>
     <string name="previous">Sebelumnya</string>
     <string name="create_new_story">Buat cerita baru</string>
-
+    <string name="enter_your_name">Masukkan nama anda</string>
+    <string name="logout_message">Apakah anda yakin ingin keluar?</string>
+    <string name="logout_process">Keluar…</string>
 </resources>

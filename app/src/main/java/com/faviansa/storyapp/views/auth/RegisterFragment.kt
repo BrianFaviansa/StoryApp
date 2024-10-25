@@ -9,14 +9,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
+import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentRegisterBinding
+import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.views.custom.EmailEditText
 import com.faviansa.storyapp.views.custom.MyButton
 import com.faviansa.storyapp.views.custom.MyEditText
@@ -48,6 +49,8 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        preferences = StoryAppPreferences.getInstance(requireActivity().dataStore)
 
         setupView()
         setupAction()
@@ -134,7 +137,7 @@ class RegisterFragment : Fragment() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            viewModel.registerResponse.collect { result ->
+            viewModel.registerResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Result.Loading -> {
                         showLoading(true)
@@ -142,12 +145,14 @@ class RegisterFragment : Fragment() {
 
                     is Result.Success -> {
                         showLoading(false)
-
+                        displayToast(requireActivity(), result.data.message.toString())
+                        val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+                        findNavController().navigate(action)
                     }
 
                     is Result.Error -> {
                         showLoading(false)
-                        displayToast(result.error)
+                        displayToast(requireActivity(), result.error)
                     }
                 }
             }
@@ -221,9 +226,5 @@ class RegisterFragment : Fragment() {
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-    }
-
-    private fun displayToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 }

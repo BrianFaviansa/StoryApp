@@ -34,7 +34,6 @@ class MyEditText @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        hint = context.getString(R.string.password_hint)
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 

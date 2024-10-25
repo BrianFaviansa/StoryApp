@@ -42,5 +42,10 @@
         bibendum, vel congue leo egestas.\n\n
     </string>
     <string name="create_new_story">Create new story</string>
+    <string name="enter_your_name">Enter your name</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="logout_message">Are you sure you want to log out?</string>
+    <string name="logout_process">Logging out…</string>
 
 </resources>
