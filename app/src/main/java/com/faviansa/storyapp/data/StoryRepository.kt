@@ -10,8 +10,11 @@ class StoryRepository private constructor(private val apiService: StoryApiServic
             val response = apiService.getAllStories(page, size, location)
             when {
                 response.isSuccessful -> {
-                    response.body()?.let { data ->
+                    val data = response.body()
+                    if (data != null) {
                         emit(Result.Success(data))
+                    } else {
+                        emit(Result.Error("Response body is null"))
                     }
                 }
                 else -> emit(Result.Error(response.errorBody()?.string() ?: "Unknown error occurred"))

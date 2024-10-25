@@ -65,9 +65,6 @@ class StoryActivity : AppCompatActivity() {
             val isLoggedIn = preferences.isLoggedIn().first()
             if (!isLoggedIn) {
                 navController.navigate(R.id.loginFragment)
-            } else {
-                "Welcome, ${preferences.getName().first()}".also { binding.tesName.text = it }
-                "Token: ${preferences.getToken().first()}".also { binding.tesToken.text = it }
             }
         }
     }
