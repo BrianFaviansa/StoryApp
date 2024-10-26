@@ -7,8 +7,7 @@ import com.faviansa.storyapp.data.di.Injection
 class StackWidgetService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
         val storyRepository = Injection.provideStoryRepository(applicationContext)
-        val preferences = Injection.providePreferences(applicationContext)
-        val viewModel = WidgetViewModelFactory(storyRepository, preferences)
+        val viewModel = WidgetViewModelFactory(storyRepository)
             .create(WidgetViewModel::class.java)
 
         return StackRemoteViewsFactory(this.applicationContext, viewModel)

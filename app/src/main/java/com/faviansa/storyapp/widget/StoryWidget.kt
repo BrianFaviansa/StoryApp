@@ -63,7 +63,6 @@ class StoryWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray,
     ) {
-        // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
@@ -73,7 +72,6 @@ class StoryWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
         when (intent.action) {
             AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
-                // Handle normal widget updates
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
                 appWidgetIds?.let {
@@ -82,7 +80,6 @@ class StoryWidget : AppWidgetProvider() {
             }
 
             STORY_ACTION -> {
-                // Handle click on story item
                 val storyId = intent.getStringExtra(EXTRA_ITEM)
                 if (storyId != null) {
                     val detailIntent = Intent(context, DetailStoryActivity::class.java).apply {

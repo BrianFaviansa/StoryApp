@@ -43,7 +43,7 @@ class ListStoryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentListStoryBinding.inflate(inflater, container, false)
         return binding.root
@@ -72,7 +72,8 @@ class ListStoryFragment : Fragment() {
 
     private fun setupView() {
         userName = runBlocking { preferences.getName().first() }
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.welcome) + " " + userName
+        (activity as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.welcome) + " " + userName
 
         rvStory = binding.rvStory
         swipeRefreshLayout = binding.swipeRefresh
@@ -99,10 +100,7 @@ class ListStoryFragment : Fragment() {
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
                 if (!isLoading && !isLastPage) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                        && firstVisibleItemPosition >= 0
-                        && totalItemCount >= pageSize
-                    ) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
                         loadMoreItems()
                     }
                 }

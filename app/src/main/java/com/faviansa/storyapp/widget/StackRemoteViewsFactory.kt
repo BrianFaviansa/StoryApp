@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.faviansa.storyapp.R
 import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
-import com.faviansa.storyapp.utils.displayToast
 import kotlinx.coroutines.runBlocking
 
 internal class StackRemoteViewsFactory(
@@ -40,10 +39,10 @@ internal class StackRemoteViewsFactory(
                         result.data.listStory?.let { storiesList.addAll(it.filterNotNull()) }
                     }
                     is Result.Error -> {
-                        displayToast(mContext, result.error)
+                        //
                     }
                     is Result.Loading -> {
-                        displayToast(mContext, "Loading")
+                        //
                     }
                 }
             }
