@@ -108,10 +108,13 @@ class StoryActivity : AppCompatActivity() {
 
     private fun performLogout() {
         displayToast(this, getString(R.string.logout_process))
-        authViewModel.logout()
+        lifecycleScope.launch {
+            authViewModel.logout()
 
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
+            val intent = Intent(this@StoryActivity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
+            finish()
+        }
     }
 }

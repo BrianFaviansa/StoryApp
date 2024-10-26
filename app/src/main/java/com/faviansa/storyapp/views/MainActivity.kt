@@ -1,5 +1,6 @@
 package com.faviansa.storyapp.views
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -9,6 +10,7 @@ import com.faviansa.storyapp.R
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.ActivityMainBinding
+import com.faviansa.storyapp.views.story.StoryActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -26,15 +28,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        lifecycleScope.launch {
-            val isLoggedIn = preferences.isLoggedIn().first()
-            if (isLoggedIn) {
-                navController.navigate(R.id.action_loginFragment_to_storyActivity)
-            } else {
-                navController.navigate(R.id.loginFragment)
+        if (savedInstanceState == null) {
+            lifecycleScope.launch {
+                val isLoggedIn = preferences.isLoggedIn().first()
+                if (isLoggedIn) {
+                    startActivity(Intent(this@MainActivity, StoryActivity::class.java))
+                    finish()
+                }
             }
         }
     }

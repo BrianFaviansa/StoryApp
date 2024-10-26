@@ -2,6 +2,7 @@ package com.faviansa.storyapp.views.auth
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,6 +22,7 @@ import com.faviansa.storyapp.databinding.FragmentLoginBinding
 import com.faviansa.storyapp.views.custom.EmailEditText
 import com.faviansa.storyapp.views.custom.MyButton
 import com.faviansa.storyapp.views.custom.PasswordEditText
+import com.faviansa.storyapp.views.story.StoryActivity
 
 
 class LoginFragment : Fragment() {
@@ -125,8 +127,9 @@ class LoginFragment : Fragment() {
                 }
                 is Result.Success -> {
                     binding.progressBar.visibility = View.GONE
-                    val action = LoginFragmentDirections.actionLoginFragmentToStoryActivity()
-                    findNavController().navigate(action)
+                    val intent = Intent(requireContext(), StoryActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
                 }
                 is Result.Error -> {
                     binding.progressBar.visibility = View.GONE

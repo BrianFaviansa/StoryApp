@@ -40,6 +40,7 @@ import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.utils.getRotatedBitmap
 import com.faviansa.storyapp.utils.reduceFileImage
 import com.faviansa.storyapp.utils.uriToFile
+import com.faviansa.storyapp.views.story.StoryActivity
 import com.faviansa.storyapp.views.story.StoryViewModelFactory
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -239,7 +240,8 @@ class CreateStoryActivity : AppCompatActivity() {
             val processedImage = uriToFile(selectedImageUri!!, this).reduceFileImage()
             val descriptionBody = RequestBody.create("text/plain".toMediaTypeOrNull(), description)
             val imageBody = RequestBody.create("image/*".toMediaTypeOrNull(), processedImage)
-            val imagePart = MultipartBody.Part.createFormData("photo", processedImage.name, imageBody)
+            val imagePart =
+                MultipartBody.Part.createFormData("photo", processedImage.name, imageBody)
 
             uploadToServer(descriptionBody, imagePart)
         } catch (e: Exception) {
@@ -260,7 +262,7 @@ class CreateStoryActivity : AppCompatActivity() {
                 is Result.Success -> {
                     loadingIndicator.visibility = ProgressBar.GONE
                     displayToast(this, getString(R.string.story_uploaded_successfully))
-                    finish()
+                    onUploadSuccess()
                 }
 
                 is Result.Error -> {
@@ -269,6 +271,13 @@ class CreateStoryActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun onUploadSuccess() {
+        val intent = Intent(this, StoryActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun toggleCamera() {

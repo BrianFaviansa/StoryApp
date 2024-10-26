@@ -1,6 +1,7 @@
 package com.faviansa.storyapp.views.story.adapter
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,14 +9,11 @@ import com.bumptech.glide.Glide
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
 import com.faviansa.storyapp.databinding.ItemStoryBinding
 import com.faviansa.storyapp.utils.formatCardDate
+import com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity
 
 class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ViewHolder>() {
     private val storiesList = mutableListOf<ListStoryItem>()
-    private var onItemClickCallback: OnItemClickCallback? = null
 
-    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
-        this.onItemClickCallback = onItemClickCallback
-    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setStoryList(newStories: List<ListStoryItem>) {
@@ -63,14 +61,14 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ViewHolder>() {
                     .centerCrop()
                     .into(storyPhoto)
 
-                root.setOnClickListener {
-                    onItemClickCallback?.onItemClicked(story)
+                itemView.setOnClickListener {
+                    val intent = Intent(itemView.context, DetailStoryActivity::class.java)
+                    intent.putExtra("story_id", story.id)
+                    itemView.context.startActivity(intent)
                 }
+
             }
         }
     }
 
-    interface OnItemClickCallback {
-        fun onItemClicked(story: ListStoryItem)
-    }
 }

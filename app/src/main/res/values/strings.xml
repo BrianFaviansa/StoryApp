@@ -64,5 +64,6 @@
     <string name="capture_failed">Capture failed: %1$s</string>
     <string name="story_uploaded_successfully">Story uploaded successfully</string>
     <string name="error">Error: %1$s</string>
+    <string name="story_image">Story image</string>
 
 </resources>
