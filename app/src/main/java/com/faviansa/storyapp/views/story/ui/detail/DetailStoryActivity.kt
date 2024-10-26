@@ -1,7 +1,6 @@
 package com.faviansa.storyapp.views.story.ui.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -42,7 +41,7 @@ class DetailStoryActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
-        storyImage = binding.detailStoryImg
+        storyImage = binding.detailStoryImage
         storyName = binding.detailStoryName
         storyDate = binding.detailStoryDate
         storyDescription = binding.detailStoryDescription

@@ -7,6 +7,93 @@
     <option name="show" value="ASK" />
     <option name="description" value="" />
   </component>
+  <component name="EntryPointsManager">
+    <entry_points version="2.0">
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.story.StoryActivity authViewModel$delegate" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.custom.PasswordEditText clearButtonImage" />
+      <entry_point TYPE="field" FQNAME="file://$PROJECT_DIR$/app/src/main/java/com/faviansa/storyapp/data/preferences/StoryAppPreferences.kt dataStore$delegate" />
+      <entry_point TYPE="method" FQNAME="com.faviansa.storyapp.utils.UtilsKt android.net.Uri getImageUri(android.content.Context context)" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity preferences" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity preferences" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.MainActivity preferences$delegate" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.story.StoryActivity preferences$delegate" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.settings.SettingsFragment settingsViewModel$delegate" />
+      <entry_point TYPE="file" FQNAME="file://$PROJECT_DIR$/app/src/main/java/com/faviansa/storyapp/data/preferences/StoryAppPreferences.kt" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity storyViewModel$delegate" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity storyViewModel$delegate" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.story.ui.list.ListStoryFragment storyViewModel$delegate" />
+      <entry_point TYPE="file" FQNAME="file://$PROJECT_DIR$/app/src/main/java/com/faviansa/storyapp/utils/Utils.kt" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.auth.LoginFragment viewModel$delegate" />
+      <entry_point TYPE="field" FQNAME="com.faviansa.storyapp.views.auth.RegisterFragment viewModel$delegate" />
+    </entry_points>
+    <pattern value="com.faviansa.storyapp.views.auth.AuthViewModel" method="login" />
+    <pattern value="com.faviansa.storyapp.ExampleUnitTest" method="addition_isCorrect" />
+    <pattern value="com.faviansa.storyapp.data.remote.retrofit.auth.AuthApiConfig" />
+    <pattern value="com.faviansa.storyapp.data.AuthRepository" />
+    <pattern value="com.faviansa.storyapp.data.AuthRepository" method="AuthRepository" />
+    <pattern value="com.faviansa.storyapp.views.auth.AuthViewModel" />
+    <pattern value="com.faviansa.storyapp.views.auth.AuthViewModelFactory" />
+    <pattern value="com.faviansa.storyapp.data.AuthRepository.Companion" />
+    <pattern value="com.faviansa.storyapp.views.auth.AuthViewModelFactory.Companion" />
+    <pattern value="com.faviansa.storyapp.views.MainActivity.Companion" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsViewModelFactory.Companion" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.StoryViewModelFactory.Companion" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.StoryViewModel" method="createNewStory" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.story.DetailStoryResponse" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.story.DetailStoryResponse" method="DetailStoryResponse" />
+    <pattern value="com.faviansa.storyapp.views.custom.EmailEditText" />
+    <pattern value="com.faviansa.storyapp.views.custom.EmailEditText" method="EmailEditText" />
+    <pattern value="com.faviansa.storyapp.ExampleInstrumentedTest" />
+    <pattern value="com.faviansa.storyapp.ExampleUnitTest" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.StoryViewModel" method="getAllStories" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.story.GetAllStoriesResponse" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.story.GetAllStoriesResponse" method="GetAllStoriesResponse" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsViewModel" method="getIsDarkModeEnabled" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsViewModel" method="getLanguage" />
+    <pattern value="com.faviansa.storyapp.utils.LocaleHelper" method="getLocale" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.StoryViewModel" method="getStoryById" />
+    <pattern value="com.faviansa.storyapp.data.di.Injection" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.list.ListStoryFragment" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.story.ListStoryItem" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.story.ListStoryItem" method="ListStoryItem" />
+    <pattern value="com.faviansa.storyapp.utils.LocaleHelper" />
+    <pattern value="com.faviansa.storyapp.views.auth.LoginFragment" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.auth.LoginResponse" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.auth.LoginResponse" method="LoginResponse" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.auth.LoginResult" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.auth.LoginResult" method="LoginResult" />
+    <pattern value="com.faviansa.storyapp.views.auth.AuthViewModel" method="logout" />
+    <pattern value="com.faviansa.storyapp.views.MainActivity" />
+    <pattern value="com.faviansa.storyapp.views.custom.MyButton" />
+    <pattern value="com.faviansa.storyapp.views.custom.MyButton" method="MyButton" />
+    <pattern value="com.faviansa.storyapp.views.custom.MyEditText" />
+    <pattern value="com.faviansa.storyapp.views.custom.MyEditText" method="MyEditText" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity" method="onBackPressed" />
+    <pattern value="com.faviansa.storyapp.views.custom.PasswordEditText" />
+    <pattern value="com.faviansa.storyapp.views.custom.PasswordEditText" method="PasswordEditText" />
+    <pattern value="com.faviansa.storyapp.data.di.Injection" method="provideAuthRepository" />
+    <pattern value="com.faviansa.storyapp.data.di.Injection" method="providePreferences" />
+    <pattern value="com.faviansa.storyapp.views.auth.AuthViewModel" method="register" />
+    <pattern value="com.faviansa.storyapp.views.auth.RegisterFragment" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.auth.RegisterResponse" />
+    <pattern value="com.faviansa.storyapp.data.remote.response.auth.RegisterResponse" method="RegisterResponse" />
+    <pattern value="com.faviansa.storyapp.views.MainActivity.Companion" method="restart" />
+    <pattern value="com.faviansa.storyapp.data.preferences.StoryAppPreferences" method="saveToken" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsViewModel" method="setIsDarkModeEnabled" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsViewModel" method="setLanguage" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsFragment" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsViewModel" />
+    <pattern value="com.faviansa.storyapp.views.settings.SettingsViewModelFactory" />
+    <pattern value="com.faviansa.storyapp.widget.StackWidgetService" />
+    <pattern value="com.faviansa.storyapp.views.story.StoryActivity" />
+    <pattern value="com.faviansa.storyapp.data.preferences.StoryAppPreferences" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.StoryViewModel" />
+    <pattern value="com.faviansa.storyapp.views.story.ui.StoryViewModelFactory" />
+    <pattern value="com.faviansa.storyapp.widget.StoryWidget" />
+    <pattern value="com.faviansa.storyapp.ExampleInstrumentedTest" method="useAppContext" />
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

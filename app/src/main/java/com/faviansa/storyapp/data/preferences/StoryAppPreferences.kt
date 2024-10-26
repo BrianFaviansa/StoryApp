@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "storyapp_preferences")
 
+@Suppress("PrivatePropertyName")
 class StoryAppPreferences private constructor(private val dataStore: DataStore<Preferences>) {
     private val TOKEN_KEY = stringPreferencesKey("token")
     private val NAME_KEY = stringPreferencesKey("name")

@@ -46,9 +46,14 @@ import com.faviansa.storyapp.views.story.ui.StoryViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileOutputStream
 
+@Suppress(
+    "PrivatePropertyName"
+)
 class CreateStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateStoryBinding
     private lateinit var preferences: StoryAppPreferences
@@ -238,8 +243,8 @@ class CreateStoryActivity : AppCompatActivity() {
             loadingIndicator.visibility = View.VISIBLE
 
             val processedImage = uriToFile(selectedImageUri!!, this).reduceFileImage()
-            val descriptionBody = RequestBody.create("text/plain".toMediaTypeOrNull(), description)
-            val imageBody = RequestBody.create("image/*".toMediaTypeOrNull(), processedImage)
+            val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
+            val imageBody = processedImage.asRequestBody("image/*".toMediaTypeOrNull())
             val imagePart =
                 MultipartBody.Part.createFormData("photo", processedImage.name, imageBody)
 
@@ -329,7 +334,7 @@ class CreateStoryActivity : AppCompatActivity() {
 
             val processedFile = createCustomTempFile(application)
             FileOutputStream(processedFile).use { outputStream ->
-                rotatedBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             }
 
             runOnUiThread {

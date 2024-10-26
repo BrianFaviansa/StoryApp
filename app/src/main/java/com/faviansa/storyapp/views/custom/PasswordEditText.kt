@@ -1,8 +1,9 @@
+@file:Suppress("PrivatePropertyName")
+
 package com.faviansa.storyapp.views.custom
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
@@ -10,11 +11,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import com.faviansa.storyapp.R
 
+@Suppress(
+    "PrivatePropertyName"
+)
 class PasswordEditText @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : AppCompatEditText(context, attrs) {
-    private var clearButtonImage: Drawable =
-        ContextCompat.getDrawable(context, R.drawable.baseline_clear_24) as Drawable
     private val MIN_PASSWORD_LENGTH = 8
 
     init {

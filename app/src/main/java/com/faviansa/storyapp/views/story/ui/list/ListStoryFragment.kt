@@ -55,7 +55,6 @@ class ListStoryFragment : Fragment() {
         preferences = StoryAppPreferences.getInstance(requireActivity().dataStore)
 
         setupView()
-        setupAction()
         setupRecyclerView()
     }
 
@@ -77,10 +76,6 @@ class ListStoryFragment : Fragment() {
 
         rvStory = binding.rvStory
         swipeRefreshLayout = binding.swipeRefresh
-
-    }
-
-    private fun setupAction() {
 
     }
 
