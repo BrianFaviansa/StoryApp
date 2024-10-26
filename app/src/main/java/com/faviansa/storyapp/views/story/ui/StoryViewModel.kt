@@ -13,7 +13,7 @@ class StoryViewModel(private val storyRepository: StoryRepository) : ViewModel()
     private val _stories = MutableLiveData<Result<List<ListStoryItem>>>()
     val stories: LiveData<Result<List<ListStoryItem>>> = _stories
 
-    fun getAllStories(page: Int = 1, size: Int = 10, location: Int = 0) {
+    fun getAllStories(page: Int, size: Int, location: Int) {
         viewModelScope.launch {
             storyRepository.getAllStories(page, size, location).collect { result ->
                 when (result) {

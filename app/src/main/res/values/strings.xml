@@ -51,5 +51,6 @@
     <string name="story_name">Story name</string>
     <string name="story_description">Story description</string>
     <string name="story_date">Story date</string>
+    <string name="no_stories_available">No stories available</string>
 
 </resources>

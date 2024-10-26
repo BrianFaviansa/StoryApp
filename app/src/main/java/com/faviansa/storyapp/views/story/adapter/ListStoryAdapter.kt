@@ -11,12 +11,30 @@ import com.faviansa.storyapp.utils.formatCardDate
 
 class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ViewHolder>() {
     private val storiesList = mutableListOf<ListStoryItem>()
+    private var onItemClickCallback: OnItemClickCallback? = null
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setStoryList(newStories: List<ListStoryItem>) {
         val sortByNewest = newStories.sortedByDescending { it.createdAt }
         storiesList.clear()
         storiesList.addAll(sortByNewest)
+        notifyDataSetChanged()
+    }
+
+    fun addStoryList(newStories: List<ListStoryItem>) {
+        val sortByNewest = newStories.sortedByDescending { it.createdAt }
+        val oldSize = storiesList.size
+        storiesList.addAll(sortByNewest)
+        notifyItemRangeInserted(oldSize, sortByNewest.size)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun clearList() {
+        storiesList.clear()
         notifyDataSetChanged()
     }
 
@@ -32,7 +50,9 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int = storiesList.size
 
-    inner class ViewHolder(private val binding: ItemStoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(private val binding: ItemStoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
         fun bind(story: ListStoryItem) {
             with(binding) {
                 storyName.text = story.name
@@ -40,8 +60,17 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ViewHolder>() {
 
                 Glide.with(itemView.context)
                     .load(story.photoUrl)
+                    .centerCrop()
                     .into(storyPhoto)
+
+                root.setOnClickListener {
+                    onItemClickCallback?.onItemClicked(story)
+                }
             }
         }
+    }
+
+    interface OnItemClickCallback {
+        fun onItemClicked(story: ListStoryItem)
     }
 }

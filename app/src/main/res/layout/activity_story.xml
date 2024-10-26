@@ -25,16 +25,6 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <TextView
-            android:id="@+id/tes_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tes_token"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment_story"
             android:name="androidx.navigation.fragment.NavHostFragment"
