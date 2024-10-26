@@ -26,13 +26,13 @@ private const val FILENAME_FORMAT = "yyyyMMdd_HHmmss"
 private val timestamp: String = SimpleDateFormat(FILENAME_FORMAT, Locale.US).format(Date())
 private const val MAXIMAL_SIZE = 1000000
 
-fun createCustomeTempFile(context: Context): File {
+fun createCustomTempFile(context: Context): File {
     val filesDir = context.externalCacheDir
     return File.createTempFile(timestamp, ".jpg", filesDir)
 }
 
 fun uriToFile(imageUri: Uri, context: Context): File {
-    val myFile = createCustomeTempFile(context)
+    val myFile = createCustomTempFile(context)
     val inputStream = context.contentResolver.openInputStream(imageUri) as InputStream
     val outputStream = FileOutputStream(myFile)
     val buffer = ByteArray(1024)

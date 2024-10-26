@@ -52,5 +52,17 @@
     <string name="story_description">Story description</string>
     <string name="story_date">Story date</string>
     <string name="no_stories_available">No stories available</string>
+    <string name="welcome">Welcome,</string>
+    <string name="gallery">Gallery</string>
+    <string name="capture">capture</string>
+    <string name="image_preview">Image preview</string>
+    <string name="upload">Upload</string>
+    <string name="camera_start_failed">Camera start failed</string>
+    <string name="please_choose_a_picture_first">Please choose a picture first</string>
+    <string name="please_add_description">Please add description</string>
+    <string name="camera_is_not_ready">Camera is not ready</string>
+    <string name="capture_failed">Capture failed: %1$s</string>
+    <string name="story_uploaded_successfully">Story uploaded successfully</string>
+    <string name="error">Error: %1$s</string>
 
 </resources>

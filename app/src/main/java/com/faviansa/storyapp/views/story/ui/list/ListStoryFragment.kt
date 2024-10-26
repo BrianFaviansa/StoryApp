@@ -5,17 +5,23 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.faviansa.storyapp.R
 import com.faviansa.storyapp.data.Result
+import com.faviansa.storyapp.data.preferences.StoryAppPreferences
+import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentListStoryBinding
 import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.views.story.StoryViewModelFactory
 import com.faviansa.storyapp.views.story.adapter.ListStoryAdapter
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 
 class ListStoryFragment : Fragment() {
@@ -24,6 +30,8 @@ class ListStoryFragment : Fragment() {
     private lateinit var listStoryAdapter: ListStoryAdapter
     private lateinit var rvStory: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var preferences: StoryAppPreferences
+    private lateinit var userName: String
     private val storyViewModel: StoryViewModel by viewModels {
         StoryViewModelFactory.getInstance(requireActivity())
     }
@@ -45,6 +53,8 @@ class ListStoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        preferences = StoryAppPreferences.getInstance(requireActivity().dataStore)
+
         setupView()
         setupAction()
         setupRecyclerView()
@@ -55,7 +65,16 @@ class ListStoryFragment : Fragment() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        resetList()
+        fetchStories()
+    }
+
     private fun setupView() {
+        userName = runBlocking { preferences.getName().first() }
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.welcome) + " " + userName
+
         rvStory = binding.rvStory
         swipeRefreshLayout = binding.swipeRefresh
 

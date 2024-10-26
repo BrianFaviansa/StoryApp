@@ -34,4 +34,6 @@
     <string name="story_description">Deskripsi Cerita</string>
     <string name="story_date">Tanggal Cerita</string>
     <string name="no_stories_available">No stories available</string>
+    <string name="welcome">Selamat datang,</string>
+    <string name="gallery">Gallery</string>
 </resources>

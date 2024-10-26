@@ -21,7 +21,7 @@ import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.views.MainActivity
 import com.faviansa.storyapp.views.auth.AuthViewModel
 import com.faviansa.storyapp.views.auth.AuthViewModelFactory
-import com.google.android.material.snackbar.Snackbar
+import com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -54,10 +54,9 @@ class StoryActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+        binding.fab.setOnClickListener {
+            val intent = Intent(this, CreateStoryActivity::class.java)
+            startActivity(intent)
         }
 
         lifecycleScope.launch {
