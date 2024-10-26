@@ -47,7 +47,6 @@ class StoryActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // Inisialisasi NavController
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_story) as NavHostFragment
         navController = navHostFragment.navController

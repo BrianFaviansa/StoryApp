@@ -7,6 +7,7 @@ import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.data.remote.retrofit.auth.AuthApiConfig
 import com.faviansa.storyapp.data.remote.retrofit.story.StoryApiConfig
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 object Injection {
@@ -16,8 +17,8 @@ object Injection {
     }
     fun provideStoryRepository(context: Context): StoryRepository {
         val preferences = StoryAppPreferences.getInstance(context.dataStore)
-        val userToken = runBlocking { preferences.getToken() }
-        val storyApiService = StoryApiConfig.getApiService(userToken.toString())
+        val userToken: String = runBlocking { preferences.getToken().first() }
+        val storyApiService = StoryApiConfig.getApiService(userToken)
         return StoryRepository.getInstance(storyApiService)
     }
 }

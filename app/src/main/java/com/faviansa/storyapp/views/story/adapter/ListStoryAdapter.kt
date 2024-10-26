@@ -1,8 +1,8 @@
 package com.faviansa.storyapp.views.story.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
@@ -12,12 +12,12 @@ import com.faviansa.storyapp.utils.formatCardDate
 class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ViewHolder>() {
     private val storiesList = mutableListOf<ListStoryItem>()
 
-    fun setStoryList(storiesList: List<ListStoryItem>) {
-        val diffCallback = StoryDiffCallback(storiesList, storiesList)
-        val diffResult = DiffUtil.calculateDiff(diffCallback)
-        this.storiesList.clear()
-        this.storiesList.addAll(storiesList)
-        diffResult.dispatchUpdatesTo(this)
+    @SuppressLint("NotifyDataSetChanged")
+    fun setStoryList(newStories: List<ListStoryItem>) {
+        val sortByNewest = newStories.sortedByDescending { it.createdAt }
+        storiesList.clear()
+        storiesList.addAll(sortByNewest)
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,22 +42,6 @@ class ListStoryAdapter : RecyclerView.Adapter<ListStoryAdapter.ViewHolder>() {
                     .load(story.photoUrl)
                     .into(storyPhoto)
             }
-        }
-    }
-
-    private class StoryDiffCallback(
-        private val oldStoryList: List<ListStoryItem>,
-        private val newStoryList: List<ListStoryItem>
-    ) : DiffUtil.Callback() {
-        override fun getOldListSize(): Int = oldStoryList.size
-        override fun getNewListSize(): Int = newStoryList.size
-
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldStoryList[oldItemPosition].id == newStoryList[newItemPosition].id
-        }
-
-        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-            return oldStoryList[oldItemPosition] == newStoryList[newItemPosition]
         }
     }
 }

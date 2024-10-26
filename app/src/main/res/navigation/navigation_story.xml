@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_story"
     app:startDestination="@id/listStoryFragment">
-
-
     <fragment
         android:id="@+id/listStoryFragment"
         android:name="com.faviansa.storyapp.views.story.ui.list.ListStoryFragment"
