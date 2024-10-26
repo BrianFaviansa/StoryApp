@@ -1,7 +1,6 @@
 package com.faviansa.storyapp.views.story.ui.list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +16,9 @@ import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentListStoryBinding
 import com.faviansa.storyapp.utils.displayToast
-import com.faviansa.storyapp.views.story.StoryViewModelFactory
 import com.faviansa.storyapp.views.story.adapter.ListStoryAdapter
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
+import com.faviansa.storyapp.views.story.ui.StoryViewModelFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -154,7 +153,6 @@ class ListStoryFragment : Fragment() {
                     swipeRefreshLayout.isRefreshing = false
                     binding.progressBar.visibility = View.GONE
                     displayToast(requireActivity(), result.error)
-                    Log.e("Fetch Stories", result.error)
                 }
             }
         }

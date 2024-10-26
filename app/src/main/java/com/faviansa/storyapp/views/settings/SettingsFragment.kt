@@ -2,7 +2,6 @@ package com.faviansa.storyapp.views.settings
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -15,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.faviansa.storyapp.R
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentSettingsBinding
@@ -45,7 +45,7 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Settings"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.settings)
         (requireActivity() as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         setHasOptionsMenu(true)
 
@@ -115,14 +115,12 @@ class SettingsFragment : Fragment() {
             .setTitle("Change Language")
             .setMessage("Do you want to change the language? The app will restart.")
             .setPositiveButton("Yes") { _, _ ->
-                Log.d("SettingsFragment", "User confirmed language change")
                 lifecycleScope.launch {
                     settingsViewModel.setLanguage(newLanguage)
                     applyLanguageAndRestart(newLanguage)
                 }
             }
             .setNegativeButton("No") { _, _ ->
-                Log.d("SettingsFragment", "User cancelled language change")
                 lifecycleScope.launch {
                     val currentLanguage = settingsViewModel.getLanguage().first()
                     val position = when (currentLanguage) {

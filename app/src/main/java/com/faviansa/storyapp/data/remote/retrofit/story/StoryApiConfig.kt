@@ -1,6 +1,5 @@
 package com.faviansa.storyapp.data.remote.retrofit.story
 
-import android.util.Log
 import com.faviansa.storyapp.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -11,7 +10,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 object StoryApiConfig {
     private const val BASE_URL = BuildConfig.BASE_URL
     fun getApiService(token: String): StoryApiService {
-        Log.d("StoryApiConfig", "Token: $token")
         val authInterceptor = Interceptor { chain ->
             val request = chain.request().newBuilder()
                 .addHeader("Authorization", "Bearer $token")

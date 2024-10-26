@@ -21,4 +21,7 @@ object Injection {
         val storyApiService = StoryApiConfig.getApiService(userToken)
         return StoryRepository.getInstance(storyApiService)
     }
+    fun providePreferences(context: Context): StoryAppPreferences {
+        return StoryAppPreferences.getInstance(context.dataStore)
+    }
 }

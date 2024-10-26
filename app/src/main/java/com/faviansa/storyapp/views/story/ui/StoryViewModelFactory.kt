@@ -1,11 +1,10 @@
-package com.faviansa.storyapp.views.story
+package com.faviansa.storyapp.views.story.ui
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.faviansa.storyapp.data.StoryRepository
 import com.faviansa.storyapp.data.di.Injection
-import com.faviansa.storyapp.views.story.ui.StoryViewModel
 
 @Suppress("UNCHECKED_CAST")
 class StoryViewModelFactory(

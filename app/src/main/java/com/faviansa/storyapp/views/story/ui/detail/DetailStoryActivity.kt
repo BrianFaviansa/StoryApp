@@ -1,6 +1,7 @@
 package com.faviansa.storyapp.views.story.ui.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -14,8 +15,8 @@ import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.ActivityDetailStoryBinding
 import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.utils.formatCardDate
-import com.faviansa.storyapp.views.story.StoryViewModelFactory
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
+import com.faviansa.storyapp.views.story.ui.StoryViewModelFactory
 
 class DetailStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailStoryBinding
