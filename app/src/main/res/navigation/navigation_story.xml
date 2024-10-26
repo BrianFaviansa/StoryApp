@@ -15,4 +15,11 @@
         android:name="com.faviansa.storyapp.views.auth.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.faviansa.storyapp.views.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+
+
 </navigation>

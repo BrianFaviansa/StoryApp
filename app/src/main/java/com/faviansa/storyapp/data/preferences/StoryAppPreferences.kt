@@ -15,15 +15,23 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "st
 class StoryAppPreferences private constructor(private val dataStore: DataStore<Preferences>) {
     private val TOKEN_KEY = stringPreferencesKey("token")
     private val NAME_KEY = stringPreferencesKey("name")
-    private val USER_ID_KEY = stringPreferencesKey("user_id")
     private val IS_LOGGED_IN_KEY = booleanPreferencesKey("is_logged_in")
+    private val LANGUAGE_KEY = stringPreferencesKey("language")
+    private val IS_DARK_MODE_ENABLED_KEY = booleanPreferencesKey("is_dark")
 
     suspend fun saveToken(token: String, name: String, userId: String) {
         dataStore.edit { preferences ->
             preferences[TOKEN_KEY] = token
             preferences[NAME_KEY] = name
-            preferences[USER_ID_KEY] = userId
             preferences[IS_LOGGED_IN_KEY] = true
+        }
+    }
+
+    suspend fun clearToken() {
+        dataStore.edit { preferences ->
+            preferences.remove(TOKEN_KEY)
+            preferences.remove(NAME_KEY)
+            preferences[IS_LOGGED_IN_KEY] = false
         }
     }
 
@@ -35,16 +43,23 @@ class StoryAppPreferences private constructor(private val dataStore: DataStore<P
         preferences[NAME_KEY] ?: ""
     }
 
-    fun getUserId(): Flow<String> = dataStore.data.map { preferences ->
-        preferences[USER_ID_KEY] ?: ""
+    fun getLanguage(): Flow<String> = dataStore.data.map { preferences ->
+        preferences[LANGUAGE_KEY] ?: "en"
     }
 
-    suspend fun clearToken() {
+    suspend fun setLanguage(language: String) {
         dataStore.edit { preferences ->
-            preferences.remove(TOKEN_KEY)
-            preferences.remove(NAME_KEY)
-            preferences.remove(USER_ID_KEY)
-            preferences[IS_LOGGED_IN_KEY] = false
+            preferences[LANGUAGE_KEY] = language
+        }
+    }
+
+    fun getIsDarkModeEnabled(): Flow<Boolean> = dataStore.data.map { preferences ->
+        preferences[IS_DARK_MODE_ENABLED_KEY] ?: false
+    }
+
+    suspend fun setIsDarkModeEnabled(isEnabled: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[IS_DARK_MODE_ENABLED_KEY] = isEnabled
         }
     }
 

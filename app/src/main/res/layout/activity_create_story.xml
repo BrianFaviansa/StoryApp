@@ -94,6 +94,7 @@
                 android:lines="3"
                 android:maxLines="5"
                 android:scrollbars="vertical"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/button_add"
                 app:layout_constraintStart_toStartOf="parent"

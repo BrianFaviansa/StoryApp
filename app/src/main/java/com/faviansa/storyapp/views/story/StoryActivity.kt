@@ -78,6 +78,10 @@ class StoryActivity : AppCompatActivity() {
                 logout()
                 true
             }
+            R.id.action_settings -> {
+                navController.navigate(R.id.settingsFragment)
+                true
+            }
 
             else -> super.onOptionsItemSelected(item)
         }
