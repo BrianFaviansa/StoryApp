@@ -1,5 +1,6 @@
 package com.faviansa.storyapp.views.story.ui.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.views.story.adapter.ListStoryAdapter
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
 import com.faviansa.storyapp.views.story.ui.StoryViewModelFactory
+import com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -34,11 +36,14 @@ class ListStoryFragment : Fragment() {
     private val storyViewModel: StoryViewModel by viewModels {
         StoryViewModelFactory.getInstance(requireActivity())
     }
+    private var lastScrollPosition = 0
+    private lateinit var layoutManager: GridLayoutManager
 
     private var currentPage = 1
     private val pageSize = 10
     private var isLoading = false
     private var isLastPage = false
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,15 +63,14 @@ class ListStoryFragment : Fragment() {
         setupRecyclerView()
     }
 
+    override fun onPause() {
+        super.onPause()
+        lastScrollPosition = (binding.rvStory.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onResume() {
-        super.onResume()
-        resetList()
-        fetchStories()
     }
 
     private fun setupView() {
@@ -80,7 +84,13 @@ class ListStoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        listStoryAdapter = ListStoryAdapter()
+        listStoryAdapter = ListStoryAdapter(
+            onItemClick = { story ->
+                val intent = Intent(requireContext(), DetailStoryActivity::class.java)
+                intent.putExtra("story_id", story.id)
+                startActivity(intent)
+            }
+        )
         val layoutManager = GridLayoutManager(requireContext(), 1)
         rvStory.layoutManager = layoutManager
         rvStory.setHasFixedSize(true)
@@ -135,6 +145,9 @@ class ListStoryFragment : Fragment() {
                         binding.emptyView.visibility = View.GONE
                         if (currentPage == 1) {
                             listStoryAdapter.setStoryList(stories)
+                            if (lastScrollPosition > 0) {
+                                rvStory.scrollToPosition(lastScrollPosition)
+                            }
                         } else {
                             listStoryAdapter.addStoryList(stories)
                         }
@@ -165,4 +178,6 @@ class ListStoryFragment : Fragment() {
     private fun fetchStories() {
         storyViewModel.getAllStories(currentPage, pageSize, 0)
     }
+
+
 }

@@ -41,11 +41,20 @@ class DetailStoryActivity : AppCompatActivity() {
     }
 
     private fun setupView() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         storyImage = binding.detailStoryImage
         storyName = binding.detailStoryName
         storyDate = binding.detailStoryDate
         storyDescription = binding.detailStoryDescription
         progressBar = binding.progressBar
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
     private fun setupDetailStory() {
