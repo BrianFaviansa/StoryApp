@@ -31,7 +31,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.faviansa.storyapp.R
-import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.ActivityCreateStoryBinding

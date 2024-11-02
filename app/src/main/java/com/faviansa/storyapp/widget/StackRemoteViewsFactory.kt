@@ -8,7 +8,6 @@ import android.widget.RemoteViewsService
 import androidx.core.os.bundleOf
 import com.bumptech.glide.Glide
 import com.faviansa.storyapp.R
-import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
 import kotlinx.coroutines.runBlocking
 

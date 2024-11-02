@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.faviansa.storyapp.data.AuthRepository
-import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.remote.response.auth.LoginResponse
 import com.faviansa.storyapp.data.remote.response.auth.RegisterResponse

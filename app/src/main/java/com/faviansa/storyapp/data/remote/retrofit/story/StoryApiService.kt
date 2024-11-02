@@ -13,7 +13,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface StoryApiService {
+interface   StoryApiService {
     @GET("stories")
     suspend fun getAllStories(
         @Query("page") page: Int,
@@ -27,6 +27,11 @@ interface StoryApiService {
         @Part("description") description: RequestBody,
         @Part photo: MultipartBody.Part
     ): Response<AddNewStoryResponse>
+
+    @GET("stories")
+    suspend fun getStoriesWithLocation(
+        @Query("location") location : Int = 1,
+    ): Response<GetAllStoriesResponse>
 
     @GET("stories/{id}")
     suspend fun getStoryById(

@@ -1,94 +1,29 @@
 package com.faviansa.storyapp.data
 
+import androidx.lifecycle.LiveData
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
+import com.faviansa.storyapp.data.local.remotemediator.StoryRemoteMediator
+import com.faviansa.storyapp.data.local.room.StoryDatabase
+import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
 import com.faviansa.storyapp.data.remote.retrofit.story.StoryApiService
-import kotlinx.coroutines.flow.flow
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 
-class StoryRepository private constructor(private val apiService: StoryApiService) {
-    fun getAllStories(page: Int, size: Int, location: Int) = flow {
-        emit(Result.Loading)
-        try {
-            val response = apiService.getAllStories(page, size, location)
-            when {
-                response.isSuccessful -> {
-                    val data = response.body()
-                    if (data != null) {
-                        emit(Result.Success(data))
-                    } else {
-                        emit(Result.Error("Response body is null"))
-                    }
-                }
-
-                else -> emit(
-                    Result.Error(
-                        response.errorBody()?.string() ?: "Unknown error occurred"
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            emit(Result.Error(e.message ?: "Unknown error occurred"))
-        }
-    }
-
-    fun createNewStory(description: RequestBody, photo: MultipartBody.Part) = flow {
-        emit(Result.Loading)
-        try {
-            val response = apiService.createNewStory(description, photo)
-            when {
-                response.isSuccessful -> {
-                    val data = response.body()
-                    if (data != null) {
-                        emit(Result.Success(data))
-                    } else {
-                        emit(Result.Error("Response body is null"))
-                    }
-                }
-
-                else -> emit(
-                    Result.Error(
-                        response.errorBody()?.string() ?: "Unknown error occurred"
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            emit(Result.Error(e.message ?: "Unknown error occurred"))
-        }
-    }
-
-    fun getStoryById(id: String) = flow {
-        emit(Result.Loading)
-        try {
-            val response = apiService.getStoryById(id)
-            when {
-                response.isSuccessful -> {
-                    val data = response.body()
-                    if (data != null) {
-                        emit(Result.Success(data))
-                    } else {
-                        emit(Result.Error("Response body is null"))
-                    }
-                }
-
-                else -> emit(
-                    Result.Error(
-                        response.errorBody()?.string() ?: "Unknown error occurred"
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            emit(Result.Error(e.message ?: "Unknown error occurred"))
-        }
-    }
-
-    companion object {
-        @Volatile
-        private var instance: StoryRepository? = null
-
-        fun getInstance(
-            apiService: StoryApiService,
-        ): StoryRepository = instance ?: synchronized(this) {
-            instance ?: StoryRepository(apiService).also { instance = it }
-        }
+class StoryRepository(
+    private val storyDatabase: StoryDatabase,
+    private val apiService: StoryApiService,
+) {
+    fun getAllStories(): LiveData<PagingData<ListStoryItem>> {
+        @OptIn(ExperimentalPagingApi::class)
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false
+            ),
+            remoteMediator = StoryRemoteMediator(storyDatabase, apiService),
+            pagingSourceFactory = { storyDatabase.storyDao().getAllStories() }
+        ).liveData
     }
 }

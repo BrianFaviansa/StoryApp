@@ -1,11 +1,12 @@
 package com.faviansa.storyapp.data.remote.response.story
 
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
 data class GetAllStoriesResponse(
 
 	@field:SerializedName("listStory")
-	val listStory: List<ListStoryItem?>? = null,
+	val listStory: List<ListStoryItem>? = null,
 
 	@field:SerializedName("error")
 	val error: Boolean? = null,
@@ -14,6 +15,7 @@ data class GetAllStoriesResponse(
 	val message: String? = null
 )
 
+@Entity(tableName = "stories")
 data class ListStoryItem(
 
 	@field:SerializedName("photoUrl")
@@ -29,13 +31,13 @@ data class ListStoryItem(
 	val description: String? = null,
 
 	@field:SerializedName("lon")
-	val lon: Any? = null,
+	val lon: Double? = null,
 
 	@field:SerializedName("id")
 	val id: String? = null,
 
 	@field:SerializedName("lat")
-	val lat: Any? = null
+	val lat: Double? = null
 )
 
 data class AddNewStoryResponse(

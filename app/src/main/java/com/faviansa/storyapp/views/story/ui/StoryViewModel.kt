@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.StoryRepository
 import com.faviansa.storyapp.data.remote.response.story.DetailStoryResponse
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
