@@ -40,7 +40,6 @@ import com.faviansa.storyapp.utils.getRotatedBitmap
 import com.faviansa.storyapp.utils.reduceFileImage
 import com.faviansa.storyapp.utils.uriToFile
 import com.faviansa.storyapp.views.story.StoryActivity
-import com.faviansa.storyapp.views.story.ui.StoryViewModelFactory
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody

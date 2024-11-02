@@ -16,9 +16,8 @@ import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentListStoryBinding
 import com.faviansa.storyapp.utils.displayToast
-import com.faviansa.storyapp.views.story.adapter.ListStoryAdapter
+import com.faviansa.storyapp.views.story.adapter.StoryListAdapter
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
-import com.faviansa.storyapp.views.story.ui.StoryViewModelFactory
 import com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -27,7 +26,7 @@ import kotlinx.coroutines.runBlocking
 class ListStoryFragment : Fragment() {
     private var _binding: FragmentListStoryBinding? = null
     private val binding get() = _binding!!
-    private lateinit var listStoryAdapter: ListStoryAdapter
+    private lateinit var listStoryAdapter: StoryListAdapter
     private lateinit var rvStory: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var preferences: StoryAppPreferences
@@ -83,7 +82,7 @@ class ListStoryFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        listStoryAdapter = ListStoryAdapter(
+        listStoryAdapter = StoryListAdapter(
             onItemClick = { story ->
                 val intent = Intent(requireContext(), DetailStoryActivity::class.java)
                 intent.putExtra("story_id", story.id)

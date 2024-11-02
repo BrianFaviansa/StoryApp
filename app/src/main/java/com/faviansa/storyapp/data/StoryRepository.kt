@@ -15,8 +15,8 @@ class StoryRepository(
     private val storyDatabase: StoryDatabase,
     private val apiService: StoryApiService,
 ) {
+    @OptIn(ExperimentalPagingApi::class)
     fun getAllStories(): LiveData<PagingData<ListStoryItem>> {
-        @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
                 pageSize = 10,

@@ -14,7 +14,6 @@ import com.faviansa.storyapp.databinding.ActivityDetailStoryBinding
 import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.utils.formatCardDate
 import com.faviansa.storyapp.views.story.ui.StoryViewModel
-import com.faviansa.storyapp.views.story.ui.StoryViewModelFactory
 
 class DetailStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailStoryBinding
@@ -93,5 +92,9 @@ class DetailStoryActivity : AppCompatActivity() {
 
     private fun showLoading(isLoading: Boolean) {
         progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+    }
+
+    companion object {
+        const val EXTRA_STORY_ID = "extra_story_id"
     }
 }

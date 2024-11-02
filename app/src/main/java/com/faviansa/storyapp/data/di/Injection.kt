@@ -3,6 +3,7 @@ package com.faviansa.storyapp.data.di
 import android.content.Context
 import com.faviansa.storyapp.data.AuthRepository
 import com.faviansa.storyapp.data.StoryRepository
+import com.faviansa.storyapp.data.local.room.StoryDatabase
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.data.remote.retrofit.auth.AuthApiConfig
@@ -19,7 +20,8 @@ object Injection {
         val preferences = StoryAppPreferences.getInstance(context.dataStore)
         val userToken: String = runBlocking { preferences.getToken().first() }
         val storyApiService = StoryApiConfig.getApiService(userToken)
-        return StoryRepository.getInstance(storyApiService)
+        val database = StoryDatabase.getInstance(context)
+        return StoryRepository(database, storyApiService)
     }
     fun providePreferences(context: Context): StoryAppPreferences {
         return StoryAppPreferences.getInstance(context.dataStore)
