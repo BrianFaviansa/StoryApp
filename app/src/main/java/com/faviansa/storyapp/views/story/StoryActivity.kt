@@ -21,6 +21,7 @@ import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.views.MainActivity
 import com.faviansa.storyapp.views.auth.AuthViewModel
 import com.faviansa.storyapp.views.auth.AuthViewModelFactory
+import com.faviansa.storyapp.views.maps.MapsActivity
 import com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -80,6 +81,11 @@ class StoryActivity : AppCompatActivity() {
             }
             R.id.action_settings -> {
                 navController.navigate(R.id.settingsFragment)
+                true
+            }
+            R.id.action_map -> {
+                val intent = Intent(this, MapsActivity::class.java)
+                startActivity(intent)
                 true
             }
 
