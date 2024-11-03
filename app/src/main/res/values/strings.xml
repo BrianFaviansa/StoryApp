@@ -56,4 +56,7 @@
     <string name="location_not_found">Unable to get current location</string>
     <string name="map_style_parsing_failed">Map style parsing failed.</string>
     <string name="can_t_find_style_error">Can\'t find style. Error: %1$s</string>
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="title_activity_maps">Activity Maps</string>
 </resources>

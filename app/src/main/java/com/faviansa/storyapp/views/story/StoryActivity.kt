@@ -17,6 +17,7 @@ import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.ActivityStoryBinding
 import com.faviansa.storyapp.utils.displayToast
+import com.faviansa.storyapp.utils.wrapEspressoIdlingResource
 import com.faviansa.storyapp.views.MainActivity
 import com.faviansa.storyapp.views.maps.MapsActivity
 import com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity
@@ -73,10 +74,12 @@ class StoryActivity : AppCompatActivity() {
                 logout()
                 true
             }
+
             R.id.action_settings -> {
                 navController.navigate(R.id.settingsFragment)
                 true
             }
+
             R.id.action_map -> {
                 val intent = Intent(this, MapsActivity::class.java)
                 startActivity(intent)
@@ -98,11 +101,11 @@ class StoryActivity : AppCompatActivity() {
 
         builder.setTitle(title)
             .setMessage(message)
-            .setPositiveButton("OK") { dialog, _ ->
+            .setPositiveButton(getString(R.string.yes)) { dialog, _ ->
                 performLogout()
                 dialog.dismiss()
             }
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
 
@@ -113,7 +116,9 @@ class StoryActivity : AppCompatActivity() {
     private fun performLogout() {
         displayToast(this, getString(R.string.logout_process))
         lifecycleScope.launch {
-            preferences.clearToken()
+            wrapEspressoIdlingResource {
+                preferences.clearToken()
+            }
 
             val intent = Intent(this@StoryActivity, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

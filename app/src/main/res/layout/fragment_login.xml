@@ -33,8 +33,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHorizontal"
-        android:alpha="0"
-        tools:alpha="100"/>
+        />
 
 
     <TextView
@@ -46,8 +45,7 @@
         android:text="@string/email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleTextView"
-        android:alpha="0"
-        tools:alpha="100"/>
+        />
 
     <com.faviansa.storyapp.views.custom.EmailEditText
         android:id="@+id/ed_login_email"
@@ -62,8 +60,7 @@
         app:layout_constraintTop_toBottomOf="@+id/emailTextView"
         app:startIconDrawable="@drawable/baseline_email_24"
         android:inputType="textEmailAddress"
-        android:alpha="0"
-        tools:alpha="100" />
+         />
 
 
     <TextView
@@ -75,8 +72,7 @@
         android:text="@string/password"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ed_login_email"
-        android:alpha="0"
-        tools:alpha="100"/>
+        />
 
     <com.faviansa.storyapp.views.custom.PasswordEditText
         android:id="@+id/ed_login_password"
@@ -92,8 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/passwordTextView"
         app:startIconDrawable="@drawable/baseline_lock_24"
         android:inputType="textPassword"
-        android:alpha="0"
-        tools:alpha="100" />
+         />
 
     <com.faviansa.storyapp.views.custom.MyButton
         android:id="@+id/login_button"
@@ -109,8 +104,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ed_login_password"
-        android:alpha="0"
-        tools:alpha="100"/>
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -127,8 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/belum_punya_akun"
-            android:alpha="0"
-            tools:alpha="100"/>
+            />
 
         <Button
             android:id="@+id/btn_to_register"
@@ -136,8 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/daftar_sekarang"
-            android:alpha="0"
-            tools:alpha="100"/>
+            />
 
     </LinearLayout>
 

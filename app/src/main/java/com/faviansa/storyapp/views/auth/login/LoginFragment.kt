@@ -107,6 +107,7 @@ class LoginFragment : Fragment() {
 
         viewModel.error.observe(viewLifecycleOwner) { error ->
             error?.let {
+
                 displayToast(requireActivity(), it)
                 viewModel.resetError()
             }
@@ -122,16 +123,17 @@ class LoginFragment : Fragment() {
                             loginResponse.loginResult.userId ?: ""
                         )
                         val intent = Intent(requireContext(), StoryActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        intent.flags =
+                            Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                     }
                 } else {
+
                     displayToast(requireActivity(), loginResponse.message ?: "Login failed")
                 }
             }
         }
     }
-
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE

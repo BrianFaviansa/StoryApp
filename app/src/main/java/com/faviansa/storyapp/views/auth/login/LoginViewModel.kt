@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.faviansa.storyapp.data.remote.response.auth.LoginResponse
 import com.faviansa.storyapp.data.remote.retrofit.auth.AuthApiConfig
+import com.faviansa.storyapp.utils.wrapEspressoIdlingResource
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
@@ -21,17 +22,19 @@ class LoginViewModel : ViewModel() {
     fun login(email: String, password: String) {
         _isLoading.value = true
         viewModelScope.launch {
-            try {
-                val response = AuthApiConfig.getApiService().login(email, password)
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _loginResult.value = response.body()
-                } else {
-                    _error.value = response.message()
+            wrapEspressoIdlingResource {
+                try {
+                    val response = AuthApiConfig.getApiService().login(email, password)
+                    if (response.isSuccessful) {
+                        _loginResult.value = response.body()
+                    } else {
+                        _error.value = response.message()
+                    }
+                } catch (e: Exception) {
+                    _error.value = e.message
+                } finally {
+                    _isLoading.value = false
                 }
-            } catch (e: Exception) {
-                _isLoading.value = false
-                _error.value = e.message
             }
         }
     }

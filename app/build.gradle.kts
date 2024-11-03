@@ -50,6 +50,9 @@ android {
         ignoreList.add("keyToIgnore")
         ignoreList.add("sdk.*")
     }
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -76,6 +79,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.paging)
+    implementation(libs.androidx.espresso.idling.resource)
     ksp(libs.androidx.room.compiler)
 
     // Paging
