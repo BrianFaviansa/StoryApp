@@ -1,4 +1,4 @@
-package com.faviansa.storyapp.views.story.ui
+package com.faviansa.storyapp.views.story.ui.list
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -11,7 +11,7 @@ import com.faviansa.storyapp.data.StoryRepository
 import com.faviansa.storyapp.data.di.Injection
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
 
-class StoryListViewModel(private val storyRepository: StoryRepository) : ViewModel() {
+class StoryListViewModel(storyRepository: StoryRepository) : ViewModel() {
 
     val stories: LiveData<PagingData<ListStoryItem>> =
         storyRepository.getAllStories().cachedIn(viewModelScope)

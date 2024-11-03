@@ -30,6 +30,7 @@ import androidx.camera.view.PreviewView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.faviansa.storyapp.R
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
@@ -54,9 +55,7 @@ import java.io.FileOutputStream
 class CreateStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateStoryBinding
     private lateinit var preferences: StoryAppPreferences
-//    private val storyViewModel: StoryViewModel by viewModels {
-//        StoryViewModelFactory.getInstance(this)
-//    }
+    private lateinit var viewModel: CreateStoryViewModel
 
     private val CAMERA_PERMISSION_CODE = 10
     private val CAMERA_PERMISSIONS = arrayOf(
@@ -83,6 +82,9 @@ class CreateStoryActivity : AppCompatActivity() {
     private var isFrontFacing: Boolean = false
     private lateinit var imageCaptureUseCase: ImageCapture
 
+    private var lat: Double = 0.0
+    private var long: Double = 0.0
+
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +92,33 @@ class CreateStoryActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         preferences = StoryAppPreferences.getInstance(dataStore)
+        viewModel = ViewModelProvider(
+            this,
+            CreateStoryViewModelFactory(this)
+        )[CreateStoryViewModel::class.java]
+
         initializeViews()
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+        viewModel.isLoading.observe(this) { isLoading ->
+            loadingIndicator.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                displayToast(this, it)
+                viewModel.resetError()
+            }
+        }
+
+        viewModel.createStoryResponse.observe(this) { response ->
+            if (response.error == false) {
+                displayToast(this, getString(R.string.story_uploaded_successfully))
+                onUploadSuccess()
+            }
+        }
     }
 
     @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
@@ -207,7 +235,7 @@ class CreateStoryActivity : AppCompatActivity() {
         val preview = Preview.Builder()
             .build()
             .also {
-                it.setSurfaceProvider(cameraPreview.surfaceProvider)
+                it.surfaceProvider = cameraPreview.surfaceProvider
             }
 
         try {
@@ -253,26 +281,15 @@ class CreateStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadToServer(description: RequestBody, image: MultipartBody.Part) {
-//        storyViewModel.createNewStory(description, image)
-//
-//        storyViewModel.stories.observe(this) { result ->
-//            when (result) {
-//                is Result.Loading -> {
-//                    loadingIndicator.visibility = ProgressBar.VISIBLE
-//                }
-//
-//                is Result.Success -> {
-//                    loadingIndicator.visibility = ProgressBar.GONE
-//                    displayToast(this, getString(R.string.story_uploaded_successfully))
-//                    onUploadSuccess()
-//                }
-//
-//                is Result.Error -> {
-//                    loadingIndicator.visibility = ProgressBar.GONE
-//                    displayToast(this, getString(R.string.error, result.error))
-//                }
-//            }
-//        }
+        val lat = "0".toRequestBody("text/plain".toMediaTypeOrNull())
+        val long = "0".toRequestBody("text/plain".toMediaTypeOrNull())
+
+        viewModel.createNewStory(
+            description = description,
+            photo = image,
+            lat = lat,
+            long = long
+        )
     }
 
     private fun onUploadSuccess() {

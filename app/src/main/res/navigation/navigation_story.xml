@@ -5,7 +5,7 @@
     app:startDestination="@id/listStoryFragment">
     <fragment
         android:id="@+id/listStoryFragment"
-        android:name="com.faviansa.storyapp.views.story.ui.list.ListStoryFragment"
+        android:name="com.faviansa.storyapp.views.story.ui.list.StoryListFragment"
         android:label="fragment_list_story"
         tools:layout="@layout/fragment_list_story" />
 

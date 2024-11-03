@@ -22,7 +22,6 @@ object Injection {
         val database = StoryDatabase.getInstance(context)
         return StoryRepository(database, storyApiService)
     }
-
     fun providePreferences(context: Context): StoryAppPreferences {
         return StoryAppPreferences.getInstance(context.dataStore)
     }

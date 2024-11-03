@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,13 +18,11 @@ import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentListStoryBinding
 import com.faviansa.storyapp.views.story.adapter.LoadingStateAdapter
 import com.faviansa.storyapp.views.story.adapter.StoryListAdapter
-import com.faviansa.storyapp.views.story.ui.StoryListViewModel
-import com.faviansa.storyapp.views.story.ui.ViewModelFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
 
-class ListStoryFragment : Fragment() {
+class StoryListFragment : Fragment() {
     private var _binding: FragmentListStoryBinding? = null
     private val binding get() = _binding!!
     private lateinit var rvStory: RecyclerView
@@ -63,7 +63,7 @@ class ListStoryFragment : Fragment() {
             getString(R.string.welcome) + " " + userName
 
         storyListViewModel = ViewModelProvider(
-            this@ListStoryFragment,
+            this@StoryListFragment,
             ViewModelFactory(requireContext())
         )[StoryListViewModel::class.java]
         rvStory = binding.rvStory
@@ -71,22 +71,24 @@ class ListStoryFragment : Fragment() {
         layoutManager = GridLayoutManager(requireContext(), 1)
         rvStory.layoutManager = layoutManager
         rvStory.setHasFixedSize(true)
-
-        swipeRefreshLayout.setOnRefreshListener {
-            getData()
-            listStoryAdapter.refresh()
-        }
-    }
-
-    private fun getData() {
         listStoryAdapter = StoryListAdapter()
         rvStory.adapter = listStoryAdapter.withLoadStateFooter(
             footer = LoadingStateAdapter {
                 listStoryAdapter.retry()
             }
         )
+
+        swipeRefreshLayout.setOnRefreshListener {
+            listStoryAdapter.refresh()
+        }
+    }
+
+    private fun getData() {
         storyListViewModel.stories.observe(viewLifecycleOwner) {
             listStoryAdapter.submitData(lifecycle, it)
+        }
+        listStoryAdapter.loadStateFlow.asLiveData().observe(viewLifecycleOwner) { loadState ->
+            swipeRefreshLayout.isRefreshing = loadState.refresh is LoadState.Loading
         }
     }
 }

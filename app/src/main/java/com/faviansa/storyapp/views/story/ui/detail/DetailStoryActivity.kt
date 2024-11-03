@@ -2,93 +2,70 @@ package com.faviansa.storyapp.views.story.ui.detail
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.faviansa.storyapp.data.preferences.StoryAppPreferences
-import com.faviansa.storyapp.data.preferences.dataStore
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.faviansa.storyapp.databinding.ActivityDetailStoryBinding
-
-//import com.faviansa.storyapp.views.story.ui.StoryViewModel
+import com.faviansa.storyapp.utils.formatCardDate
 
 class DetailStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailStoryBinding
-    private lateinit var preferences: StoryAppPreferences
-//    private val storyViewModel: StoryViewModel by viewModels {
-//        StoryViewModelFactory.getInstance(this)
-//    }
-    private lateinit var storyImage: ImageView
-    private lateinit var storyName: TextView
-    private lateinit var storyDate: TextView
-    private lateinit var storyDescription: TextView
-    private lateinit var progressBar: ProgressBar
+    private lateinit var viewModel: DetailStoryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailStoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        preferences = StoryAppPreferences.getInstance(this.dataStore)
-
         setupView()
-        setupDetailStory()
+        setupViewModel()
+        observeViewModel()
     }
 
     private fun setupView() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+    }
 
-        storyImage = binding.detailStoryImage
-        storyName = binding.detailStoryName
-        storyDate = binding.detailStoryDate
-        storyDescription = binding.detailStoryDescription
-        progressBar = binding.progressBar
+    private fun setupViewModel() {
+        val storyId = intent.getStringExtra(EXTRA_STORY_ID) ?: ""
+        viewModel = ViewModelProvider(
+            this,
+            DetailStoryViewModelFactory(this, storyId)
+        )[DetailStoryViewModel::class.java]
+    }
+
+    private fun observeViewModel() {
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.error.observe(this) { error ->
+            error?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        viewModel.story.observe(this) { story ->
+            story?.let {
+                binding.apply {
+                    detailStoryName.text = it.name
+                    detailStoryDate.text = formatCardDate(it.createdAt.toString())
+                    detailStoryDescription.text = it.description
+
+                    Glide.with(this@DetailStoryActivity)
+                        .load(it.photoUrl)
+                        .into(detailStoryImage)
+                }
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
-    }
-
-    private fun setupDetailStory() {
-        val storyId = intent.getStringExtra("story_id") ?: ""
-
-//        storyViewModel.getStoryById(storyId)
-//
-//        storyViewModel.story.observe(this) { result ->
-//            when (result) {
-//                is Result.Loading -> {
-//                    showLoading(true)
-//                }
-//
-//                is Result.Success -> {
-//                    showLoading(false)
-//                    val detailResponse = result.data
-//                    val story = detailResponse.story
-//                    story?.let {
-//                        storyName.text = it.name
-//                        storyDate.text = formatCardDate(it.createdAt.toString())
-//                        storyDescription.text = it.description
-//
-//                        Glide.with(this)
-//                            .load(it.photoUrl)
-//                            .into(storyImage)
-//                    }
-//
-//                }
-//
-//                is Result.Error -> {
-//                    showLoading(false)
-//                    displayToast(this, result.error)
-//                }
-//            }
-//        }
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     companion object {

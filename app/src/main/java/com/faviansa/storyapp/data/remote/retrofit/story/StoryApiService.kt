@@ -25,7 +25,9 @@ interface   StoryApiService {
     @POST("stories")
     suspend fun createNewStory(
         @Part("description") description: RequestBody,
-        @Part photo: MultipartBody.Part
+        @Part photo: MultipartBody.Part,
+        @Part("lat") lat: RequestBody? = null,
+        @Part("lon") long: RequestBody? = null
     ): Response<AddNewStoryResponse>
 
     @GET("stories")
