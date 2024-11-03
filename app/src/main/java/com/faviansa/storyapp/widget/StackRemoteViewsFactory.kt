@@ -13,61 +13,60 @@ import kotlinx.coroutines.runBlocking
 
 internal class StackRemoteViewsFactory(
     private val mContext: Context,
-    private var widgetViewModel: WidgetViewModel,
 ) : RemoteViewsService.RemoteViewsFactory {
 
     private var storiesList = mutableListOf<ListStoryItem>()
-    private var page: Int = 1
-    private val pageSize: Int = 10
-    private val location: Int = 0
     private lateinit var userToken: String
-
+    private lateinit var widgetViewModel: WidgetViewModel
 
     override fun onCreate() {
-        widgetViewModel =
-            ViewModelProvider.AndroidViewModelFactory.getInstance(mContext.applicationContext as android.app.Application)
-                .create(WidgetViewModel::class.java)
-
+        widgetViewModel = ViewModelProvider.AndroidViewModelFactory
+            .getInstance(mContext.applicationContext as android.app.Application)
+            .create(WidgetViewModel::class.java)
         userToken = Injection.provideUserToken(mContext)
     }
 
     override fun onDataSetChanged() {
         runBlocking {
-            val stories = widgetViewModel.getStories(userToken, page, pageSize, location)
-            if (stories != null) {
+            try {
+                val stories = widgetViewModel.getStories(userToken)
                 storiesList.clear()
-                storiesList.addAll(stories)
+                if (!stories.isNullOrEmpty()) {
+                    storiesList.addAll(stories)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
-    override fun onDestroy() {}
+    override fun onDestroy() {
+        storiesList.clear()
+    }
 
     override fun getCount(): Int = storiesList.size
 
     override fun getViewAt(position: Int): RemoteViews {
-        if (position == storiesList.size - 1) {
-            page++
-            onDataSetChanged()
+        if (position < 0 || position >= storiesList.size) {
+            return RemoteViews(mContext.packageName, R.layout.item_widget)
         }
-        val sortedStories = storiesList.sortedByDescending { it.createdAt }
-        val story = sortedStories[position]
+
+        val story = storiesList[position]
         val views = RemoteViews(mContext.packageName, R.layout.item_widget).apply {
             setTextViewText(R.id.story_user_name, story.name)
             val imageBitmap = story.photoUrl?.let { loadWidgetImage(it) }
             imageBitmap?.let { setImageViewBitmap(R.id.story_image, it) }
         }
 
-        val intent = Intent().apply { putExtra(StoryWidget.EXTRA_ITEM, story.id) }
+        val intent = Intent().apply {
+            putExtra(StoryWidget.EXTRA_ITEM, story.id)
+        }
         views.setOnClickFillInIntent(R.id.item_widget, intent)
         return views
     }
 
     override fun getLoadingView(): RemoteViews? = null
-
     override fun getViewTypeCount(): Int = 1
-
     override fun getItemId(i: Int): Long = i.toLong()
-
     override fun hasStableIds(): Boolean = true
 }

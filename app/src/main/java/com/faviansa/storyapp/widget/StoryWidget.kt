@@ -11,9 +11,6 @@ import androidx.core.net.toUri
 import com.faviansa.storyapp.R
 import com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity
 
-/**
- * Implementation of App Widget functionality.
- */
 class StoryWidget : AppWidgetProvider() {
 
     companion object {
@@ -54,7 +51,6 @@ class StoryWidget : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
-
 
     override fun onUpdate(
         context: Context,
