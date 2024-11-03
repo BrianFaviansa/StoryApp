@@ -75,7 +75,6 @@ dependencies {
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
 
-    implementation(libs.androidx.paging.runtime.ktx)
     implementation(libs.androidx.espresso.idling.resource)
     implementation(libs.androidx.junit.ktx)
     implementation(libs.androidx.espresso.core)

@@ -1,13 +1,12 @@
 package com.faviansa.storyapp.views.story.ui.list
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -15,10 +14,10 @@ import com.faviansa.storyapp.R
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentListStoryBinding
-import com.faviansa.storyapp.utils.displayToast
+import com.faviansa.storyapp.views.story.adapter.LoadingStateAdapter
 import com.faviansa.storyapp.views.story.adapter.StoryListAdapter
-import com.faviansa.storyapp.views.story.ui.StoryViewModel
-import com.faviansa.storyapp.views.story.ui.detail.DetailStoryActivity
+import com.faviansa.storyapp.views.story.ui.StoryListViewModel
+import com.faviansa.storyapp.views.story.ui.ViewModelFactory
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -26,21 +25,13 @@ import kotlinx.coroutines.runBlocking
 class ListStoryFragment : Fragment() {
     private var _binding: FragmentListStoryBinding? = null
     private val binding get() = _binding!!
-    private lateinit var listStoryAdapter: StoryListAdapter
     private lateinit var rvStory: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var preferences: StoryAppPreferences
     private lateinit var userName: String
-    private val storyViewModel: StoryViewModel by viewModels {
-        StoryViewModelFactory.getInstance(requireActivity())
-    }
-    private var lastScrollPosition = 0
+    private lateinit var listStoryAdapter: StoryListAdapter
+    private lateinit var storyListViewModel: StoryListViewModel
     private lateinit var layoutManager: GridLayoutManager
-
-    private var currentPage = 1
-    private val pageSize = 10
-    private var isLoading = false
-    private var isLastPage = false
 
 
     override fun onCreateView(
@@ -57,13 +48,8 @@ class ListStoryFragment : Fragment() {
 
         preferences = StoryAppPreferences.getInstance(requireActivity().dataStore)
 
-        setupView()
-        setupRecyclerView()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        lastScrollPosition = (binding.rvStory.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+        setupViews()
+        getData()
     }
 
     override fun onDestroyView() {
@@ -71,111 +57,36 @@ class ListStoryFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupView() {
+    private fun setupViews() {
         userName = runBlocking { preferences.getName().first() }
         (activity as AppCompatActivity).supportActionBar?.title =
             getString(R.string.welcome) + " " + userName
 
+        storyListViewModel = ViewModelProvider(
+            this@ListStoryFragment,
+            ViewModelFactory(requireContext())
+        )[StoryListViewModel::class.java]
         rvStory = binding.rvStory
         swipeRefreshLayout = binding.swipeRefresh
-
-    }
-
-    private fun setupRecyclerView() {
-        listStoryAdapter = StoryListAdapter(
-            onItemClick = { story ->
-                val intent = Intent(requireContext(), DetailStoryActivity::class.java)
-                intent.putExtra("story_id", story.id)
-                startActivity(intent)
-            }
-        )
-        val layoutManager = GridLayoutManager(requireContext(), 1)
+        layoutManager = GridLayoutManager(requireContext(), 1)
         rvStory.layoutManager = layoutManager
         rvStory.setHasFixedSize(true)
-        rvStory.adapter = listStoryAdapter
-
-        rvStory.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val visibleItemCount = layoutManager.childCount
-                val totalItemCount = layoutManager.itemCount
-                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-
-                if (!isLoading && !isLastPage) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && totalItemCount >= pageSize) {
-                        loadMoreItems()
-                    }
-                }
-            }
-        })
-
-        fetchStories()
 
         swipeRefreshLayout.setOnRefreshListener {
-            resetList()
-            fetchStories()
+            getData()
+            listStoryAdapter.refresh()
         }
+    }
 
-        storyViewModel.stories.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    isLoading = true
-                    if (currentPage == 1) {
-                        swipeRefreshLayout.isRefreshing = true
-                    } else {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                }
-
-                is Result.Success -> {
-                    isLoading = false
-                    swipeRefreshLayout.isRefreshing = false
-                    binding.progressBar.visibility = View.GONE
-
-                    val stories = result.data
-                    if (stories.isEmpty()) {
-                        isLastPage = true
-                        if (currentPage == 1) {
-                            binding.emptyView.visibility = View.VISIBLE
-                        }
-                    } else {
-                        binding.emptyView.visibility = View.GONE
-                        if (currentPage == 1) {
-                            listStoryAdapter.setStoryList(stories)
-                            if (lastScrollPosition > 0) {
-                                rvStory.scrollToPosition(lastScrollPosition)
-                            }
-                        } else {
-                            listStoryAdapter.addStoryList(stories)
-                        }
-                    }
-                }
-
-                is Result.Error -> {
-                    isLoading = false
-                    swipeRefreshLayout.isRefreshing = false
-                    binding.progressBar.visibility = View.GONE
-                    displayToast(requireActivity(), result.error)
-                }
+    private fun getData() {
+        listStoryAdapter = StoryListAdapter()
+        rvStory.adapter = listStoryAdapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                listStoryAdapter.retry()
             }
+        )
+        storyListViewModel.stories.observe(viewLifecycleOwner) {
+            listStoryAdapter.submitData(lifecycle, it)
         }
     }
-
-    private fun loadMoreItems() {
-        currentPage++
-        fetchStories()
-    }
-
-    private fun resetList() {
-        currentPage = 1
-        isLastPage = false
-        listStoryAdapter.clearList()
-    }
-
-    private fun fetchStories() {
-        storyViewModel.getAllStories(currentPage, pageSize, 0)
-    }
-
-
 }

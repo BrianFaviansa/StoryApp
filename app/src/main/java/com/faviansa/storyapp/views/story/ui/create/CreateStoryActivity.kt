@@ -1,5 +1,6 @@
 package com.faviansa.storyapp.views.story.ui.create
 
+//import com.faviansa.storyapp.views.story.ui.StoryViewModel
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,7 +18,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.AspectRatio
@@ -40,7 +40,6 @@ import com.faviansa.storyapp.utils.getRotatedBitmap
 import com.faviansa.storyapp.utils.reduceFileImage
 import com.faviansa.storyapp.utils.uriToFile
 import com.faviansa.storyapp.views.story.StoryActivity
-import com.faviansa.storyapp.views.story.ui.StoryViewModel
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -55,9 +54,9 @@ import java.io.FileOutputStream
 class CreateStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateStoryBinding
     private lateinit var preferences: StoryAppPreferences
-    private val storyViewModel: StoryViewModel by viewModels {
-        StoryViewModelFactory.getInstance(this)
-    }
+//    private val storyViewModel: StoryViewModel by viewModels {
+//        StoryViewModelFactory.getInstance(this)
+//    }
 
     private val CAMERA_PERMISSION_CODE = 10
     private val CAMERA_PERMISSIONS = arrayOf(
@@ -254,26 +253,26 @@ class CreateStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadToServer(description: RequestBody, image: MultipartBody.Part) {
-        storyViewModel.createNewStory(description, image)
-
-        storyViewModel.stories.observe(this) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    loadingIndicator.visibility = ProgressBar.VISIBLE
-                }
-
-                is Result.Success -> {
-                    loadingIndicator.visibility = ProgressBar.GONE
-                    displayToast(this, getString(R.string.story_uploaded_successfully))
-                    onUploadSuccess()
-                }
-
-                is Result.Error -> {
-                    loadingIndicator.visibility = ProgressBar.GONE
-                    displayToast(this, getString(R.string.error, result.error))
-                }
-            }
-        }
+//        storyViewModel.createNewStory(description, image)
+//
+//        storyViewModel.stories.observe(this) { result ->
+//            when (result) {
+//                is Result.Loading -> {
+//                    loadingIndicator.visibility = ProgressBar.VISIBLE
+//                }
+//
+//                is Result.Success -> {
+//                    loadingIndicator.visibility = ProgressBar.GONE
+//                    displayToast(this, getString(R.string.story_uploaded_successfully))
+//                    onUploadSuccess()
+//                }
+//
+//                is Result.Error -> {
+//                    loadingIndicator.visibility = ProgressBar.GONE
+//                    displayToast(this, getString(R.string.error, result.error))
+//                }
+//            }
+//        }
     }
 
     private fun onUploadSuccess() {

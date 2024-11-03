@@ -2,13 +2,13 @@ package com.faviansa.storyapp.widget
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
-import androidx.core.os.bundleOf
-import com.bumptech.glide.Glide
+import androidx.lifecycle.ViewModelProvider
 import com.faviansa.storyapp.R
+import com.faviansa.storyapp.data.di.Injection
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
+import com.faviansa.storyapp.utils.loadWidgetImage
 import kotlinx.coroutines.runBlocking
 
 internal class StackRemoteViewsFactory(
@@ -16,81 +16,58 @@ internal class StackRemoteViewsFactory(
     private var widgetViewModel: WidgetViewModel,
 ) : RemoteViewsService.RemoteViewsFactory {
 
-    private var storiesList: MutableList<ListStoryItem> = mutableListOf()
+    private var storiesList = mutableListOf<ListStoryItem>()
     private var page: Int = 1
     private val pageSize: Int = 10
     private val location: Int = 0
+    private lateinit var userToken: String
+
 
     override fun onCreate() {
-        loadStories()
+        widgetViewModel =
+            ViewModelProvider.AndroidViewModelFactory.getInstance(mContext.applicationContext as android.app.Application)
+                .create(WidgetViewModel::class.java)
+
+        userToken = Injection.provideUserToken(mContext)
     }
 
     override fun onDataSetChanged() {
-        loadStories()
-    }
-
-    private fun loadStories() {
         runBlocking {
-            widgetViewModel.getStories(page, pageSize, location).collect { result ->
-                when (result) {
-                    is Result.Success -> {
-                        storiesList.clear()
-                        result.data.listStory?.let { storiesList.addAll(it.filterNotNull()) }
-                    }
-                    is Result.Error -> {
-                        //
-                    }
-                    is Result.Loading -> {
-                        //
-                    }
-                }
+            val stories = widgetViewModel.getStories(userToken, page, pageSize, location)
+            if (stories != null) {
+                storiesList.clear()
+                storiesList.addAll(stories)
             }
         }
     }
 
-
-    override fun onDestroy() {
-        storiesList.clear()
-    }
+    override fun onDestroy() {}
 
     override fun getCount(): Int = storiesList.size
 
     override fun getViewAt(position: Int): RemoteViews {
-        val rv = RemoteViews(mContext.packageName, R.layout.item_widget)
-
-        try {
-            val story = storiesList[position]
-
-            val bitmap: Bitmap = runBlocking {
-                Glide.with(mContext)
-                    .asBitmap()
-                    .load(story.photoUrl)
-                    .submit()
-                    .get()
-            }
-
-            rv.setImageViewBitmap(R.id.story_image, bitmap)
-            rv.setTextViewText(R.id.story_user_name, story.name)
-
-            val extras = bundleOf(
-                StoryWidget.EXTRA_ITEM to story.id
-            )
-            val fillInIntent = Intent().apply {
-                putExtras(extras)
-            }
-            rv.setOnClickFillInIntent(R.id.item_widget, fillInIntent)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        if (position == storiesList.size - 1) {
+            page++
+            onDataSetChanged()
+        }
+        val sortedStories = storiesList.sortedByDescending { it.createdAt }
+        val story = sortedStories[position]
+        val views = RemoteViews(mContext.packageName, R.layout.item_widget).apply {
+            setTextViewText(R.id.story_user_name, story.name)
+            val imageBitmap = story.photoUrl?.let { loadWidgetImage(it) }
+            imageBitmap?.let { setImageViewBitmap(R.id.story_image, it) }
         }
 
-        return rv
+        val intent = Intent().apply { putExtra(StoryWidget.EXTRA_ITEM, story.id) }
+        views.setOnClickFillInIntent(R.id.item_widget, intent)
+        return views
     }
 
     override fun getLoadingView(): RemoteViews? = null
 
     override fun getViewTypeCount(): Int = 1
 
-    override fun getItemId(i: Int): Long = 0
+    override fun getItemId(i: Int): Long = i.toLong()
 
-    override fun hasStableIds(): Boolean = false
+    override fun hasStableIds(): Boolean = true
 }

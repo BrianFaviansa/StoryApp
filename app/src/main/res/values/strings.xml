@@ -49,5 +49,7 @@
     <string name="flip_camera">flip camera</string>
     <string name="title_activity_maps" translatable="false">MapsActivity</string>
     <string name="maps">Maps</string>
+    <string name="retry">Retry</string>
+    <string name="timeout">Timeout</string>
 
 </resources>

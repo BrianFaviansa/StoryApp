@@ -47,11 +47,9 @@ class StoryWidget : AppWidgetProvider() {
             }
 
             val pendingIntent = PendingIntent.getBroadcast(
-                context,
-                0,
-                storyIntent,
-                flags
+                context, 0, storyIntent, flags
             )
+
             views.setPendingIntentTemplate(R.id.stack_view, pendingIntent)
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
@@ -70,33 +68,14 @@ class StoryWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        when (intent.action) {
-            AppWidgetManager.ACTION_APPWIDGET_UPDATE -> {
-                val appWidgetManager = AppWidgetManager.getInstance(context)
-                val appWidgetIds = intent.getIntArrayExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-                appWidgetIds?.let {
-                    onUpdate(context, appWidgetManager, it)
-                }
+        if (intent.action == STORY_ACTION) {
+            val storyId = intent.getStringExtra(EXTRA_ITEM)
+            val flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            val intentToDetail = Intent(context, DetailStoryActivity::class.java).apply {
+                putExtra(DetailStoryActivity.EXTRA_STORY_ID, storyId)
+                addFlags(flags)
             }
-
-            STORY_ACTION -> {
-                val storyId = intent.getStringExtra(EXTRA_ITEM)
-                if (storyId != null) {
-                    val detailIntent = Intent(context, DetailStoryActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        putExtra("story_id", storyId)
-                    }
-                    context.startActivity(detailIntent)
-                }
-            }
+            context.startActivity(intentToDetail)
         }
-    }
-
-    override fun onEnabled(context: Context) {
-        super.onEnabled(context)
-    }
-
-    override fun onDisabled(context: Context) {
-        super.onDisabled(context)
     }
 }

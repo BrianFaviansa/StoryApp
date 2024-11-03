@@ -17,13 +17,18 @@ object Injection {
         return AuthRepository.getInstance(authApiService)
     }
     fun provideStoryRepository(context: Context): StoryRepository {
-        val preferences = StoryAppPreferences.getInstance(context.dataStore)
-        val userToken: String = runBlocking { preferences.getToken().first() }
+        val userToken = provideUserToken(context)
         val storyApiService = StoryApiConfig.getApiService(userToken)
         val database = StoryDatabase.getInstance(context)
         return StoryRepository(database, storyApiService)
     }
+
     fun providePreferences(context: Context): StoryAppPreferences {
         return StoryAppPreferences.getInstance(context.dataStore)
+    }
+    fun provideUserToken(context: Context): String {
+        val preferences = StoryAppPreferences.getInstance(context.dataStore)
+        val userToken: String = runBlocking { preferences.getToken().first() }
+        return userToken
     }
 }

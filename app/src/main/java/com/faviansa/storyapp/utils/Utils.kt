@@ -14,6 +14,8 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -87,8 +89,21 @@ fun formatCardDate(input: String): String {
     return date?.let { outputFormat.format(it) } ?: ""
 }
 
-
+fun loadWidgetImage(imageUrl: String): Bitmap? {
+    return try {
+        val url = URL(imageUrl)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.doInput = true
+        connection.connect()
+        val input = connection.inputStream
+        BitmapFactory.decodeStream(input)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
 
 fun displayToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
+

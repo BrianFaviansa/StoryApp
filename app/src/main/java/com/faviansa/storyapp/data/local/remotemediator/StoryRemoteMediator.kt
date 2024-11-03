@@ -1,7 +1,6 @@
 package com.faviansa.storyapp.data.local.remotemediator
 
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.LoadState.Loading.endOfPaginationReached
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
@@ -16,6 +15,10 @@ class StoryRemoteMediator(
     private val apiService: StoryApiService,
 ) : RemoteMediator<Int, ListStoryItem>() {
 
+    private companion object {
+        const val INITIAL_PAGE_INDEX = 1
+    }
+
     override suspend fun initialize(): InitializeAction {
         return InitializeAction.LAUNCH_INITIAL_REFRESH
     }
@@ -27,15 +30,15 @@ class StoryRemoteMediator(
         val page = INITIAL_PAGE_INDEX
 
         try {
-            val responseData = apiService.getAllStories(page, state.config.pageSize, 0)
-
+            val response = apiService.getAllStories(page, state.config.pageSize, 0)
+            val responseData = response.body()?.listStory ?: emptyList()
             val endOfPaginationReached = responseData.isEmpty()
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    database.quoteDao().deleteAll()
+                    database.storyDao().deleteAllStories()
                 }
-                database.quoteDao().insertQuote(responseData)
+                database.storyDao().insertAllStories(responseData)
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (exception: Exception) {
@@ -43,7 +46,5 @@ class StoryRemoteMediator(
         }
     }
 
-    private companion object {
-        const val INITIAL_PAGE_INDEX = 1
-    }
+
 }

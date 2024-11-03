@@ -2,12 +2,11 @@ package com.faviansa.storyapp.widget
 
 import android.content.Intent
 import android.widget.RemoteViewsService
-import com.faviansa.storyapp.data.di.Injection
+import androidx.lifecycle.ViewModelProvider
 
 class StackWidgetService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        val storyRepository = Injection.provideStoryRepository(applicationContext)
-        val viewModel = WidgetViewModelFactory(storyRepository)
+        val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(application)
             .create(WidgetViewModel::class.java)
 
         return StackRemoteViewsFactory(this.applicationContext, viewModel)
