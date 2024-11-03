@@ -51,5 +51,9 @@
     <string name="maps">Maps</string>
     <string name="retry">Retry</string>
     <string name="timeout">Timeout</string>
+    <string name="include_location">Include current location</string>
+    <string name="location_permission_denied">Location permission denied</string>
+    <string name="location_acquired">Location acquired successfully</string>
+    <string name="location_not_found">Unable to get current location</string>
 
 </resources>

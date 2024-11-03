@@ -89,6 +89,15 @@ class StoryListFragment : Fragment() {
         }
         listStoryAdapter.loadStateFlow.asLiveData().observe(viewLifecycleOwner) { loadState ->
             swipeRefreshLayout.isRefreshing = loadState.refresh is LoadState.Loading
+            if (loadState.refresh is LoadState.NotLoading) {
+                scrollToTop()
+            }
+        }
+    }
+
+    private fun scrollToTop() {
+        rvStory.post {
+            rvStory.smoothScrollToPosition(0)
         }
     }
 }

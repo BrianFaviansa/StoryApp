@@ -1,11 +1,12 @@
 package com.faviansa.storyapp.views.story.ui.create
 
-//import com.faviansa.storyapp.views.story.ui.StoryViewModel
+import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.Location
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -41,6 +43,8 @@ import com.faviansa.storyapp.utils.getRotatedBitmap
 import com.faviansa.storyapp.utils.reduceFileImage
 import com.faviansa.storyapp.utils.uriToFile
 import com.faviansa.storyapp.views.story.StoryActivity
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -49,19 +53,20 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileOutputStream
 
-@Suppress(
-    "PrivatePropertyName"
-)
+@Suppress("DEPRECATION")
 class CreateStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateStoryBinding
     private lateinit var preferences: StoryAppPreferences
     private lateinit var viewModel: CreateStoryViewModel
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
-    private val CAMERA_PERMISSION_CODE = 10
-    private val CAMERA_PERMISSIONS = arrayOf(
-        android.Manifest.permission.CAMERA,
-        android.Manifest.permission.READ_EXTERNAL_STORAGE
+    private val REQUIRED_PERMISSIONS = arrayOf(
+        Manifest.permission.CAMERA,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
     )
+    private val CAMERA_PERMISSION_CODE = 10
 
     private var cameraMode: CameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
@@ -75,15 +80,29 @@ class CreateStoryActivity : AppCompatActivity() {
     private lateinit var selectedImage: ImageView
     private lateinit var storyDescription: EditText
     private lateinit var publishButton: ImageButton
+    private lateinit var locationCheckBox: CheckBox
 
     private lateinit var loadingIndicator: ProgressBar
 
     private var selectedImageUri: Uri? = null
     private var isFrontFacing: Boolean = false
     private lateinit var imageCaptureUseCase: ImageCapture
+    private var currentLocation: Location? = null
 
-    private var lat: Double = 0.0
-    private var long: Double = 0.0
+    private val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        when {
+            permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                    permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true -> {
+                getLastLocation()
+            }
+            else -> {
+                displayToast(this, getString(R.string.location_permission_denied))
+                locationCheckBox.isChecked = false
+            }
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,6 +115,8 @@ class CreateStoryActivity : AppCompatActivity() {
             this,
             CreateStoryViewModelFactory(this)
         )[CreateStoryViewModel::class.java]
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         initializeViews()
         observeViewModel()
@@ -121,7 +142,7 @@ class CreateStoryActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("This method has been deprecated in favor of using the\n      {@link OnBackPressedDispatcher} via {@link #getOnBackPressedDispatcher()}.\n      The OnBackPressedDispatcher controls how back button events are dispatched\n      to one or more {@link OnBackPressedCallback} objects.")
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (storyEditorContainer.visibility == View.VISIBLE) {
             storyEditorContainer.visibility = View.GONE
@@ -146,12 +167,57 @@ class CreateStoryActivity : AppCompatActivity() {
             selectedImage = ivImagePreview
             storyDescription = edAddDescription
             publishButton = buttonAdd
+            locationCheckBox = cbLocation
 
             loadingIndicator = progressBar
         }
 
         checkAndRequestPermissions()
         setupButtonListeners()
+        setupLocationCheckbox()
+    }
+
+    private fun setupLocationCheckbox() {
+        locationCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                checkLocationPermissions()
+            } else {
+                currentLocation = null
+            }
+        }
+    }
+
+    private fun checkLocationPermissions() {
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED ||
+            checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) ==
+            PackageManager.PERMISSION_GRANTED) {
+            getLastLocation()
+        } else {
+            locationPermissionRequest.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    private fun getLastLocation() {
+        try {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                currentLocation = location
+                if (location != null) {
+                    displayToast(this, getString(R.string.location_acquired))
+                } else {
+                    displayToast(this, getString(R.string.location_not_found))
+                    locationCheckBox.isChecked = false
+                }
+            }
+        } catch (e: SecurityException) {
+            displayToast(this, getString(R.string.location_permission_denied))
+            locationCheckBox.isChecked = false
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -166,12 +232,15 @@ class CreateStoryActivity : AppCompatActivity() {
         if (hasRequiredPermissions()) {
             initializeCamera()
         } else {
-            requestCameraPermissions()
+            ActivityCompat.requestPermissions(
+                this,
+                REQUIRED_PERMISSIONS,
+                CAMERA_PERMISSION_CODE
+            )
         }
     }
 
     private fun hideSystemUI() {
-        @Suppress("DEPRECATION")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.hide(WindowInsets.Type.statusBars())
         } else {
@@ -184,20 +253,12 @@ class CreateStoryActivity : AppCompatActivity() {
     }
 
     private fun hasRequiredPermissions(): Boolean {
-        return CAMERA_PERMISSIONS.all { permission ->
+        return REQUIRED_PERMISSIONS.all { permission ->
             ContextCompat.checkSelfPermission(
                 baseContext,
                 permission
             ) == PackageManager.PERMISSION_GRANTED
         }
-    }
-
-    private fun requestCameraPermissions() {
-        ActivityCompat.requestPermissions(
-            this,
-            CAMERA_PERMISSIONS,
-            CAMERA_PERMISSION_CODE
-        )
     }
 
     override fun onRequestPermissionsResult(
@@ -270,8 +331,7 @@ class CreateStoryActivity : AppCompatActivity() {
             val processedImage = uriToFile(selectedImageUri!!, this).reduceFileImage()
             val descriptionBody = description.toRequestBody("text/plain".toMediaTypeOrNull())
             val imageBody = processedImage.asRequestBody("image/*".toMediaTypeOrNull())
-            val imagePart =
-                MultipartBody.Part.createFormData("photo", processedImage.name, imageBody)
+            val imagePart = MultipartBody.Part.createFormData("photo", processedImage.name, imageBody)
 
             uploadToServer(descriptionBody, imagePart)
         } catch (e: Exception) {
@@ -281,14 +341,18 @@ class CreateStoryActivity : AppCompatActivity() {
     }
 
     private fun uploadToServer(description: RequestBody, image: MultipartBody.Part) {
-        val lat = "0".toRequestBody("text/plain".toMediaTypeOrNull())
-        val long = "0".toRequestBody("text/plain".toMediaTypeOrNull())
+        val lat = if (locationCheckBox.isChecked && currentLocation != null) {
+            currentLocation?.latitude.toString()
+        } else "0"
+        val long = if (locationCheckBox.isChecked && currentLocation != null) {
+            currentLocation?.longitude.toString()
+        } else "0"
 
         viewModel.createNewStory(
             description = description,
             photo = image,
-            lat = lat,
-            long = long
+            lat = lat.toRequestBody("text/plain".toMediaTypeOrNull()),
+            long = long.toRequestBody("text/plain".toMediaTypeOrNull())
         )
     }
 
