@@ -55,4 +55,6 @@
     <string name="location_permission_denied">Izin lokasi ditolak</string>
     <string name="location_acquired">Lokasi berhasil diperoleh</string>
     <string name="location_not_found">Tidak dapat memperoleh lokasi saat ini</string>
+    <string name="map_style_parsing_failed">Parsing gaya peta gagal.</string>
+    <string name="can_t_find_style_error">Tidak dapat menemukan gaya. Kesalahan: %1$s</string>
 </resources>

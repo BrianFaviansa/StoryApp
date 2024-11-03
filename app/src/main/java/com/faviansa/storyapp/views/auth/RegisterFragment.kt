@@ -3,12 +3,11 @@ package com.faviansa.storyapp.views.auth
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -69,50 +68,17 @@ class RegisterFragment : Fragment() {
         passwordEditText = binding.edRegisterPassword
         registerButton = binding.registerButton
 
-        nameEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        nameEditText.addTextChangedListener {
+            checkEditTextErrors()
+        }
 
-            }
+        emailEditText.addTextChangedListener {
+            checkEditTextErrors()
+        }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                checkEditTextErrors()
-            }
-
-        })
-
-        emailEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                checkEditTextErrors()
-            }
-
-        })
-
-        passwordEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                checkEditTextErrors()
-            }
-
-        })
+        passwordEditText.addTextChangedListener {
+            checkEditTextErrors()
+        }
     }
 
     private fun setupAction() {
@@ -130,6 +96,10 @@ class RegisterFragment : Fragment() {
         name = nameEditText.text.toString()
         email = emailEditText.text.toString()
         password = passwordEditText.text.toString()
+
+        if (password.isEmpty()) {
+            passwordEditText.error = null
+        }
 
         registerButton.isEnabled = name.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()
                 && nameEditText.error == null && emailEditText.error == null && passwordEditText.error == null

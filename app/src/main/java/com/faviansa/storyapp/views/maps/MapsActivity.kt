@@ -1,5 +1,6 @@
 package com.faviansa.storyapp.views.maps
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -8,12 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import com.faviansa.storyapp.R
 import com.faviansa.storyapp.data.remote.response.story.ListStoryItem
 import com.faviansa.storyapp.databinding.ActivityMapsBinding
+import com.faviansa.storyapp.utils.displayToast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -72,7 +75,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             isMapToolbarEnabled = true
         }
 
+        setMapStyle()
         viewModel.getStoriestWithLocation()
+    }
+
+    private fun setMapStyle() {
+        try {
+            val success =
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+            if (!success) {
+                displayToast(this, getString(R.string.map_style_parsing_failed))
+            }
+        } catch (exception: Resources.NotFoundException) {
+            displayToast(this, getString(R.string.can_t_find_style_error, exception.message))
+        }
     }
 
     private fun addManyMarker(stories: List<ListStoryItem>) {
