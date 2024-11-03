@@ -1,4 +1,4 @@
-package com.faviansa.storyapp.views.auth
+package com.faviansa.storyapp.views.auth.register
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -10,9 +10,7 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentRegisterBinding
@@ -21,7 +19,6 @@ import com.faviansa.storyapp.views.custom.EmailEditText
 import com.faviansa.storyapp.views.custom.MyButton
 import com.faviansa.storyapp.views.custom.MyEditText
 import com.faviansa.storyapp.views.custom.PasswordEditText
-import kotlinx.coroutines.launch
 
 class RegisterFragment : Fragment() {
     private var _binding: FragmentRegisterBinding? = null
@@ -34,9 +31,7 @@ class RegisterFragment : Fragment() {
     private lateinit var name: String
     private lateinit var email: String
     private lateinit var password: String
-    private val viewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory.getInstance(requireActivity(), preferences)
-    }
+    private val viewModel: RegisterViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -88,6 +83,10 @@ class RegisterFragment : Fragment() {
         }
 
         binding.registerButton.setOnClickListener {
+            name = nameEditText.text.toString()
+            email = emailEditText.text.toString()
+            password = passwordEditText.text.toString()
+
             viewModel.register(name, email, password)
         }
     }
@@ -106,29 +105,29 @@ class RegisterFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
-            viewModel.registerResponse.observe(viewLifecycleOwner) { result ->
-                when (result) {
-                    is Result.Loading -> {
-                        showLoading(true)
-                    }
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            showLoading(isLoading)
+        }
 
-                    is Result.Success -> {
-                        showLoading(false)
-                        displayToast(requireActivity(), result.data.message.toString())
-                        val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
-                        findNavController().navigate(action)
-                    }
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                displayToast(requireActivity(), it)
+                viewModel.resetError()
+            }
+        }
 
-                    is Result.Error -> {
-                        showLoading(false)
-                        displayToast(requireActivity(), result.error)
-                    }
+        viewModel.registerResult.observe(viewLifecycleOwner) { response ->
+            response?.let { registerResponse ->
+                if (registerResponse.error == false) {
+                    displayToast(requireActivity(), registerResponse.message.toString())
+                    val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+                    findNavController().navigate(action)
+                } else {
+                    displayToast(requireActivity(), registerResponse.message.toString())
                 }
             }
         }
     }
-
 
     private fun setupAnimation() {
         val scaleX = ObjectAnimator.ofFloat(binding.imageView, View.SCALE_X, 1f, 1.1f).apply {

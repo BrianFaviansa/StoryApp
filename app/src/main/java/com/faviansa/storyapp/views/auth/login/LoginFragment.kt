@@ -1,4 +1,4 @@
-package com.faviansa.storyapp.views.auth
+package com.faviansa.storyapp.views.auth.login
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
@@ -9,20 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
-import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.faviansa.storyapp.data.Result
 import com.faviansa.storyapp.data.preferences.StoryAppPreferences
 import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.FragmentLoginBinding
+import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.views.custom.EmailEditText
 import com.faviansa.storyapp.views.custom.MyButton
 import com.faviansa.storyapp.views.custom.PasswordEditText
 import com.faviansa.storyapp.views.story.StoryActivity
-
+import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
@@ -34,13 +34,11 @@ class LoginFragment : Fragment() {
     private lateinit var preferences: StoryAppPreferences
     private lateinit var email: String
     private lateinit var password: String
-    private val viewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory.getInstance(requireActivity(), preferences)
-    }
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
@@ -84,6 +82,8 @@ class LoginFragment : Fragment() {
         }
 
         loginButton.setOnClickListener {
+            email = emailEditText.text.toString()
+            password = passwordEditText.text.toString()
             viewModel.login(email, password)
         }
     }
@@ -101,23 +101,40 @@ class LoginFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.loginResponse.observe(viewLifecycleOwner) { result ->
-            when (result) {
-                is Result.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-                is Result.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    val intent = Intent(requireContext(), StoryActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    startActivity(intent)
-                }
-                is Result.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), result.error, Toast.LENGTH_SHORT).show()
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            showLoading(isLoading)
+        }
+
+        viewModel.error.observe(viewLifecycleOwner) { error ->
+            error?.let {
+                displayToast(requireActivity(), it)
+                viewModel.resetError()
+            }
+        }
+
+        viewModel.loginResult.observe(viewLifecycleOwner) { response ->
+            response?.let { loginResponse ->
+                if (loginResponse.error == false && loginResponse.loginResult != null) {
+                    lifecycleScope.launch {
+                        preferences.saveToken(
+                            loginResponse.loginResult.token ?: "",
+                            loginResponse.loginResult.name ?: "",
+                            loginResponse.loginResult.userId ?: ""
+                        )
+                        val intent = Intent(requireContext(), StoryActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                    }
+                } else {
+                    displayToast(requireActivity(), loginResponse.message ?: "Login failed")
                 }
             }
         }
+    }
+
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 
     private fun setupAnimation() {

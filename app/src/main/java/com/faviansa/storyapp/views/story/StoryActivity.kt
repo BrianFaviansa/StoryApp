@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -19,8 +18,6 @@ import com.faviansa.storyapp.data.preferences.dataStore
 import com.faviansa.storyapp.databinding.ActivityStoryBinding
 import com.faviansa.storyapp.utils.displayToast
 import com.faviansa.storyapp.views.MainActivity
-import com.faviansa.storyapp.views.auth.AuthViewModel
-import com.faviansa.storyapp.views.auth.AuthViewModelFactory
 import com.faviansa.storyapp.views.maps.MapsActivity
 import com.faviansa.storyapp.views.story.ui.create.CreateStoryActivity
 import kotlinx.coroutines.flow.first
@@ -33,9 +30,6 @@ class StoryActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val preferences: StoryAppPreferences by lazy {
         StoryAppPreferences.getInstance(this.dataStore)
-    }
-    private val authViewModel: AuthViewModel by viewModels {
-        AuthViewModelFactory.getInstance(this, preferences)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +113,7 @@ class StoryActivity : AppCompatActivity() {
     private fun performLogout() {
         displayToast(this, getString(R.string.logout_process))
         lifecycleScope.launch {
-            authViewModel.logout()
+            preferences.clearToken()
 
             val intent = Intent(this@StoryActivity, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
