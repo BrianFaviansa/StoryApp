@@ -48,74 +48,88 @@ android {
         defaultPropertiesFileName = "local.defaults.properties"
 
         ignoreList.add("keyToIgnore")
-        ignoreList.add("sdk.*")      
+        ignoreList.add("sdk.*")
     }
 }
 
 dependencies {
-    implementation(libs.glide)
-    implementation(libs.volley)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.ui.desktop)
-
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.paging.runtime.ktx)
-    implementation(libs.androidx.room.paging)
-    ksp(libs.androidx.room.compiler)
-
-    implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.activity)
-    implementation(libs.androidx.swiperefreshlayout)
-
-    implementation(libs.play.services.maps)
-    implementation(libs.play.services.location)
-
-    implementation(libs.androidx.espresso.idling.resource)
-    implementation(libs.androidx.junit.ktx)
-    implementation(libs.androidx.espresso.core)
-    implementation(libs.accessibility.test.framework)
-    implementation(libs.androidx.espresso.intents)
-
+    // Core dependencies
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.guava)
 
+    // Lifecycle and ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+
+    // Navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
+    // Splash screen
+    implementation(libs.androidx.core.splashscreen)
+
+    // Room (Database)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.room.paging)
+    ksp(libs.androidx.room.compiler)
+
+    // Paging
+    implementation(libs.androidx.paging.runtime.ktx)
+
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+
+    // Retrofit (Networking)
     implementation(libs.retrofit2.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
+    implementation(libs.volley) // Alternative networking library if used
 
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.fragment.ktx)
+    // Image loading
+    implementation(libs.glide)
 
+    // Coroutine
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
 
+    // DataStore
     implementation(libs.androidx.datastore.preferences)
 
+    // Camera
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.camera.extensions)
 
-    implementation(libs.guava)
+    // Play Services (Maps and Location)
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
 
-    testImplementation(libs.androidx.core.testing)
-    testImplementation(libs.kotlinx.coroutines.test)
+    // UI/Fragment (Desktop UI or Fragment)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.ui.desktop)
+
+    // Testing libraries
+    testImplementation(libs.junit)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.inline)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.core.testing)
-    androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation(libs.androidx.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.core.testing)
+
+    androidTestImplementation(libs.androidx.junit.ktx)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.espresso.contrib)
+    androidTestImplementation(libs.androidx.espresso.idling.resource)
+    androidTestImplementation(libs.androidx.espresso.intents)
+    androidTestImplementation(libs.androidx.core.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.accessibility.test.framework)
 }
